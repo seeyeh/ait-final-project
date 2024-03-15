@@ -1,7 +1,3 @@
-The content below is an example project proposal / requirements document. Replace the text below the lines marked "__TODO__" with details specific to your project. Remove the "TODO" lines.
-
-(__TODO__: your project name)
-
 # Work it Out! 
 
 ## Overview
@@ -77,19 +73,14 @@ An Example Exercise:
 
 ## Wireframes
 
-<!-- (__TODO__: wireframes for all of the pages on your site; they can be as simple as photos of drawings or you can use a tool like Balsamiq, Omnigraffle, etc.)
+/home - page for showing all workout templates
 
-/list/create - page for creating a new shopping list
+![list create](documentation/home.png)
 
-![list create](documentation/list-create.png)
+/home/slug - page for showing specific workout template
 
-/list - page for showing all shopping lists
+![list](documentation/home-slug.png)
 
-![list](documentation/list.png)
-
-/list/slug - page for showing specific shopping list
-
-![list](documentation/list-slug.png) -->
 
 ## Site map
 
@@ -126,7 +117,7 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 ## [Link to Initial Main Project File](app.mjs) 
 
-(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)
+
 
 ## Annotations / References Used
 
