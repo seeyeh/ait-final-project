@@ -1,0 +1,21 @@
+<form method="POST" action="">
+	<div>
+		<label for="title">Workout Title:</label>
+		<input type="text" name="title" value="">
+	</div>
+
+    <div>
+        What exercises will you do?
+    </div>
+    {{#each exercises}}
+        <div>
+            <input type="checkbox" id={{title}} name={{title}} />
+            <label for={{title}}>{{title}}</label>
+            {{!-- <a href={{url}}>{{title}}</a> - [<a href="/article/{{slug}}">details</a>] --}}
+        </div>
+    {{/each}}
+
+	<div>
+		<input type="submit" value="Create new workout!">
+	</div>
+</form>
