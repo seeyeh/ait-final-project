@@ -1,12 +1,19 @@
 <form method="POST" action="">
 	<div>
-		<label for="title">Workout Title:</label>
+		<br>
+        <label for="title">Workout Title:</label>
 		<input type="text" name="title" value="">
 	</div>
 
-    <div>
+    <div id="exercise-search">
         What exercises will you do?
+        <input type="text" id="exercise-query" name="title" value="">
+        <input type="button" id="search-exercise" value="Add Exercise!">
     </div>
+
+    <div id="exercise-list">
+    </div>
+
     {{#each exercises}}
         <div>
             <input type="checkbox" id={{title}} name={{title}} />
@@ -19,3 +26,4 @@
 		<input type="submit" value="Create new workout!">
 	</div>
 </form>
+<script defer src="../javascripts/index.js"></script>
