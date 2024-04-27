@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
+import './config.mjs'
 
-mongoose.connect('mongodb://localhost/workoutDB');
+mongoose.connect(process.env.DSN);
 
 // const User = new mongoose.Schema({
 // 	name: String,

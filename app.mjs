@@ -58,6 +58,7 @@ app.set('view engine', 'hbs');
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/', function(req,res){
     res.render('index',{'workouts':workouts});
@@ -67,14 +68,26 @@ app.get('/create', function(req,res){
     res.render('create',{'exercises':exercises});
 })
 
-app.post('/create', function(req,res){
-    console.log(req.body);
-    const date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let fullDate = day + "." + month + "." + year;
-    workouts.unshift({title: req.body.title, date: fullDate});
+app.post('/create', async function(req,res){
+    console.log(req.body[0]);
+    for(let i=0;i<req.body.length;i++){
+        const newAttempt = new Attempt({
+            lastDone: Date.now(),
+            sets: req.body[i].sets
+        })
+
+        const existingExercise = await Exercise.findOne({exerciseName:req.body[i].exerciseName});
+        console.log(existingExercise);
+        existingExercise.lastAttempt = newAttempt._id;
+        existingExercise.attempts.unshift(newAttempt._id);
+        existingExercise.markModified('lastAttempt');
+        existingExercise.markModified('attempts');
+        
+        const savedAttempt = await newAttempt.save();
+        const savedExercise = await existingExercise.save();
+        console.log(savedAttempt);
+        console.log(savedExercise);
+    }
     res.redirect("/");
 })
 
@@ -82,6 +95,18 @@ app.get('/exercises/', async function(req,res){
     try{
         // console.log(JSON.stringify(req.query.name));
         const foundExercises = await Exercise.find({exerciseName:req.query.name}).populate('lastAttempt').exec();
+        if(foundExercises.length===0){
+            const newExercise = new Exercise({
+                exerciseName: req.query.name,
+                lastAttempt: null,
+            })
+
+            const savedExercise = await newExercise.save();
+            console.log(newExercise);
+            // console.log(newExercise);
+            // console.log(newExercise.lastAttempt === null);
+            foundExercises.push(newExercise);
+        }
         // console.log(foundExercises);
         res.json(foundExercises);
     }
