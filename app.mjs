@@ -72,7 +72,7 @@ app.post('/create', async function(req,res){
     console.log(req.body[0]);
     for(let i=0;i<req.body.length;i++){
         const newAttempt = new Attempt({
-            lastDone: Date.now(),
+            lastDone: new Date(),
             sets: req.body[i].sets
         })
 
@@ -109,6 +109,17 @@ app.get('/exercises/', async function(req,res){
         }
         // console.log(foundExercises);
         res.json(foundExercises);
+    }
+    catch(e){
+        console.log(e);
+    }
+})
+
+app.get('/exercise-history', async function(req,res){
+    try{
+        const foundExercise = await Exercise.find({exerciseName:req.query.name}).populate('attempts').exec();
+        console.log(foundExercise[0]);
+        res.json(foundExercise[0]);
     }
     catch(e){
         console.log(e);

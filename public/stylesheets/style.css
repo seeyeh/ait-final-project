@@ -6,3 +6,26 @@
 .set-completed{
     background-color: #7aff89;
 }
+
+.modal {
+	/* TODO: comment display: none out if using showModal */
+	/* display: none; */
+	position: fixed;
+	top: 0px;
+	left: 0px;
+    bottom:10px;
+	width: 100%;
+	height: 100%;
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+    padding: 20px;
+	vertical-align: center;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-height: 100%;
+    overflow-y: auto;
+}

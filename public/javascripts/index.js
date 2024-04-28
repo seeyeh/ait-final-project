@@ -64,15 +64,59 @@ function insertExerciseDiv(exerciseObj,isFirstTime=false){
   const exerciseName = exerciseObj.exerciseName;
   
   const exerciseList = document.querySelector('#exercise-list');
+  const outerDiv = document.querySelector('#outer');
 
   const divElement = createElement('div',{class:'exercise-box'});
   const h3Element = createElement('h3',{id:'exercise-name'},exerciseName);
+  const historyButton = createElement('button',{class:'view-history'},"View History");
   const olElement = createElement('ol',{style:'list-style-type:decimal'},"");
+
   // const h4Element = createElement('h4',{},`Last Performed: ${dateOfAttempt}`);
 
   prevAttempt.map((set)=>makeSetRow(set,olElement));
 
+  historyButton.addEventListener('click',async function(evt){
+    const queryValue = exerciseName.replace(/\s/g,"+");
+    const fullPath = `/exercise-history?name=${queryValue}`;
+    console.log(fullPath);
+    const response = await fetch(fullPath);
+    const foundExercise = await response.json();
 
+    const historyModal = createElement('dialog',{id:"history-modal",class:"modal"});
+    const modalContent = createElement('div',{class:"modal-content"});
+
+    const closeButton = createElement('button',{class:'close-history'},"Close History");
+    modalContent.appendChild(closeButton);
+
+    closeButton.addEventListener('click',function(evt){
+      historyModal.close();
+    })
+
+    const h3Element = createElement('h3',{id:'exercise-name'},exerciseName);
+    modalContent.appendChild(h3Element);
+
+    for(let attempt of foundExercise.attempts){
+      if(attempt.sets.length===0){
+        continue;
+      }
+      const dateText = attempt.lastDone.toString().slice(0,10);
+      console.log(dateText);
+      const dateElement = createElement('h5',{id:'completed-on'},`Completed on: ${dateText}`);
+      modalContent.appendChild(dateElement);
+      const olElement = createElement('ol',{style:'list-style-type:decimal'},"");
+      attempt.sets.map((set)=>{
+        const prevText = `${set.weight} lbs x ${set.reps} reps`; // stats of same set of their last recent attempt
+        const liElement = createElement('li',{class:""},prevText+"\t");
+        olElement.appendChild(liElement);
+      });
+      modalContent.appendChild(olElement);
+      modalContent.appendChild(createElement('br'));
+    }
+
+    historyModal.appendChild(modalContent);
+    outerDiv.appendChild(historyModal);
+    historyModal.show();
+  })
   
   const addSetButton = createElement('button',{
     class:'add-set',
@@ -82,6 +126,8 @@ function insertExerciseDiv(exerciseObj,isFirstTime=false){
   addSetButton.addEventListener('click',function(evt){
     makeSetRow({weight:0,reps:0},olElement);
   })
+
+  h3Element.appendChild(historyButton);
 
   divElement.appendChild(h3Element);
   divElement.appendChild(olElement);
@@ -94,21 +140,23 @@ const searchButton = document.querySelector("#search-exercise");
 
 searchButton.addEventListener("click",async function(evt){
     const exerciseToSearch = document.querySelector("#exercise-query");
-    const queryValue = exerciseToSearch.value.replace(/\s/g,"+");
-    exerciseToSearch.value = "";
-    const fullPath = `/exercises?name=${queryValue}`;
-    console.log(fullPath);
-    const response = await fetch(fullPath);
-    const exerciseList = await response.json();
-
-    const foundExercise = exerciseList[0]
-    if(foundExercise.lastAttempt === null){
-      console.log(`No last attempt with this exercise!`);
-      insertExerciseDiv(foundExercise,true);
-    }
-
-    else{
-      insertExerciseDiv(foundExercise);
+    if(exerciseToSearch.value!==""){
+      const queryValue = exerciseToSearch.value.replace(/\s/g,"+");
+      exerciseToSearch.value = "";
+      const fullPath = `/exercises?name=${queryValue}`;
+      console.log(fullPath);
+      const response = await fetch(fullPath);
+      const exerciseList = await response.json();
+  
+      const foundExercise = exerciseList[0]
+      if(foundExercise.lastAttempt === null){
+        console.log(`No last attempt with this exercise!`);
+        insertExerciseDiv(foundExercise,true);
+      }
+  
+      else{
+        insertExerciseDiv(foundExercise);
+      }
     }
       // console.log("Yuh!\n"+foundExercise.lastAttempt.sets[0].weight);
     
