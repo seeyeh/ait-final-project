@@ -2,31 +2,22 @@
 
 ## Overview
 
-Work it Out is a web app that allows users to make workout templates that record the exercises they do, the number of reps they perform, and the weight with which they perform it. Users can rgister and login. Once they're logged in, they can start a workout by creating a new template or using an existing one. 
+Work it Out is a web app that allows users to record their workout data! Users can add exercises they are planning to do, and record the number of reps they perform, and the weight with which they perform it.
 
 Once they've started a workout, they can input the number of reps/weight they perform for a specific exercise, while on the side, their reps/weight performed in their most recent attempt at that specific exercise in a previous workout is displayed. The user can also click into a specific exercise and it will expand into a window showing their all-time history with that exercise. This is inspired by an existing workout tracker app named Strong!
 
 
 ## Data Model
 
-The application will store Users, Workouts and Exercises
+The application will store Exercises and Atempts
 
-* users can have multiple workouts (via references)
-* each workout can have multiple exercises (via references)
+* a user can have multiple exercises (via references)
+* an exercises can have multiple attempts (via references)
 
-(__TODO__: sample documents)
+My original plan was to implement Users and Workouts as well but I chose to limit the scope a bit.
 
-An Example User:
 
-```javascript
-{
-  username: "workerouter",
-  hash: // a password hash,
-  workouts: // an array of references to Workout documents
-}
-```
-
-An Example Workout:
+An Example Workout: (NOT IMPLEMENTED)
 
 ```javascript
 {
@@ -41,43 +32,36 @@ An Example Exercise:
 
 ```javascript
 {
-  name: "Seated Row (Cable)",
-  sets: [
-    { weight: "110", reps: "12"},
-    { weight: "110", reps: "10"},
-  ],
-  history: [
+  _id: new ObjectId('662c91504d256189a42e65b9'),
+  exerciseName: 'Hammer Curls',
+  lastAttempt: new ObjectId('662c9eb113cdc41a48a04d1a'),
+  attempts: [
     {
-      workoutName: "Pull Day"
-      date: // date
-      sets: [
-        { weight: "110", reps: "11"}, { weight: "110", reps: "10"}
-      ],
+      _id: new ObjectId('662c9eb113cdc41a48a04d1a'),
+      lastDone: 2024-04-27T06:44:01.538Z,
+      sets: [Array],
+      __v: 0
     },
-
     {
-      workoutName: "Pull Day"
-      date: // date
-      sets: [
-        { weight: "110", reps: "11"}, { weight: "110", reps: "9"}
-      ],
-    },
-  ]
+      _id: new ObjectId('662c9a04c0513e7db981019c'),
+      lastDone: 2024-04-27T06:24:04.400Z,
+      sets: [],
+      __v: 0
+    }
 }
 ```
 
 
 ## [Link to Commented First Draft Schema](db.mjs) 
 
-(__TODO__: create a first draft of your Schemas in db.mjs and link to it)
 
 ## Wireframes
 
-/home - page for showing all workout templates
+/home - landing page with start workout button
 
 ![list create](documentation/home.png)
 
-/home/slug - page for showing specific workout template
+/home/create - page showing started workout, can add new exercises, record new weight/reps, and see attempt history for added exercises
 
 ![list](documentation/home-slug.png)
 
@@ -90,29 +74,21 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 ## User Stories or Use Cases)
 
-1. as non-registered user, I can register a new account with the site
-2. as a user, I can log in to the site
-3. as a user, I can create a new workout template
-4. as a user, I can view all of the workout templates I've already made in a list
-5. as a user, I can use a workout template I made previously
-5. as a user, I can add exercises to a new/existing workout template
-6. as a user, I can view a specific exercise's history and see a list of my previous sets from old workouts in a list, with an associated workout template name and date
+1. as a user, I can start a new workout
+2. as a user, I can search for and add exercises to a current workout; if it is an exercise you have not done before, I can save it in the database
+3. as a user, I can view a specific exercise's history and see a list of my previous sets from old workouts in a list, with an associated date
+4. as a user, I can finish a workout and save all of my current reps/weights into their respective exercises
+
 
 ## Research Topics
 
-(__TODO__: the research topics that you're planning on working on along with their point values... and the total points of research topics listed)
 
-* (5 points) Integrate user authentication
-    <!-- * I'm going to be using passport for user authentication
-    * And account has been made for testing; I'll email you the password
-    * see <code>cs.nyu.edu/~jversoza/ait-final/register</code> for register page
-    * see <code>cs.nyu.edu/~jversoza/ait-final/login</code> for login page -->
-* (4 points) Perform client side form validation using a JavaScript library
-    <!-- * see <code>cs.nyu.edu/~jversoza/ait-final/my-form</code>
-    * if you put in a number that's greater than 5, an error message will appear in the dom -->
-* (2 points) Use a CSS framework or UI toolkit, use a reasonable of customization of the framework (don't just use stock Bootstrap - minimally configure a theme): tailwind.css
+* IMPLEMENTED! (2 points) Use a CSS framework or UI toolkit, use a reasonable of customization of the framework (don't just use stock Bootstrap - minimally configure a theme): tailwind.css
+* (EDIT: did not end up implementing) (5 points) Integrate user authentication
+* (EDIT: did not end up implementing) (4 points) Perform client side form validation using a JavaScript library 
 
-11 points total out of 10 required points (___TODO__: addtional points will __not__ count for extra credit)
+
+2 points total out of 10 required points
 
 
 ## [Link to Initial Main Project File](app.mjs) 
@@ -121,8 +97,7 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 ## Annotations / References Used
 
-<!-- (__TODO__: list any tutorials/references/etc. that you've based your code off of)
-
-1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
-2. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this) -->
+1. [tailwind css documentation](https://tailwindcss.com/docs/installation) - (add link to source code that was based on this)
+2. [tailwind css documentation on buttons](https://v1.tailwindcss.com/components/buttons) - 
+3. [various notes from class slides on mongoDB](https://cs.nyu.edu/courses/spring24/CSCI-UA.0467-001/_site/)
 

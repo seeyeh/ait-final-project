@@ -16,13 +16,15 @@ function createElement(type, attrs, ...children) {
 
 function makeSetRow(set,olElement){
   const prevText = `${set.weight} lbs x ${set.reps} reps`; // stats of same set of their last recent attempt
-  const liElement = createElement('li',{class:""},prevText+"\t");
+  const liElement = createElement('li',{class:"space-x-2.5"},prevText+"\t");
   const weightInput = createElement('input',{
+    class: 'shadow appearance-none border rounded-xl w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
     type:'number',
     id:'weight-input',
     name:'weight',
     placeholder:'Weight (in lbs)'}, " x ");
   const repsInput = createElement('input',{
+    class: 'shadow appearance-none border rounded-xl w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
     type:'number',
     id:'reps-input',
     name:'reps',
@@ -64,11 +66,11 @@ function insertExerciseDiv(exerciseObj,isFirstTime=false){
   const exerciseName = exerciseObj.exerciseName;
   
   const exerciseList = document.querySelector('#exercise-list');
-  const outerDiv = document.querySelector('#outer');
 
-  const divElement = createElement('div',{class:'exercise-box'});
-  const h3Element = createElement('h3',{id:'exercise-name'},exerciseName);
-  const historyButton = createElement('button',{class:'view-history'},"View History");
+  const divElement = createElement('div',{class:'p-10 exercise-box border border-neutral-950 rounded-xl w-9/12'});
+  const h3Element = createElement('h3',{id:'exercise-name', class:'text-xl font-bold pb-1'},exerciseName);
+  const historyButton = createElement('button',{class:"view-history text-xs bg-white hover:bg-gray-100 text-gray-800 font-semibold py px-2 border border-gray-400 rounded shadow"},"View History");
+  const olDiv = createElement('div',{id:'ol-div', class:"p-4"},"");
   const olElement = createElement('ol',{style:'list-style-type:decimal'},"");
 
   // const h4Element = createElement('h4',{},`Last Performed: ${dateOfAttempt}`);
@@ -114,12 +116,12 @@ function insertExerciseDiv(exerciseObj,isFirstTime=false){
     }
 
     historyModal.appendChild(modalContent);
-    outerDiv.appendChild(historyModal);
+    document.body.appendChild(historyModal);
     historyModal.show();
   })
   
   const addSetButton = createElement('button',{
-    class:'add-set',
+    class:'add-set text-xs bg-white text-orange-500 hover:bg-gray-100 text-gray-800 font-semibold py px-2 border border-gray-400 rounded shadow',
     value:"Add Set!"
   },"Add Set!")
 
@@ -127,10 +129,10 @@ function insertExerciseDiv(exerciseObj,isFirstTime=false){
     makeSetRow({weight:0,reps:0},olElement);
   })
 
-  h3Element.appendChild(historyButton);
-
   divElement.appendChild(h3Element);
-  divElement.appendChild(olElement);
+  divElement.appendChild(historyButton);
+  olDiv.appendChild(olElement);
+  divElement.appendChild(olDiv);
   divElement.appendChild(addSetButton);
   exerciseList.appendChild(divElement);
   exerciseList.appendChild(createElement('br'));

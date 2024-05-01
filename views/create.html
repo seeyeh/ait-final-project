@@ -1,0 +1,43 @@
+<link href="../stylesheets/style.css" type="text/css" rel="stylesheet">
+
+
+
+<div id="outer" class="p-20">
+    <h1 class="text-3xl font-extrabold">
+        Your Workout
+    </h1>
+    <br>
+	<!-- <div>
+		<br>
+        <label for="title">Workout Title:</label>
+		<input type="text" id="workout-title" name="title" value="">
+	</div><br> -->
+
+    <div id="exercise-search">
+        <div class="pb-3">
+            What exercise do you want to do? (case and space sensitive)
+        </div>
+        <input type="text" id="exercise-query" class=
+        "shadow appearance-none border rounded-xl w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        name="exercc" value="">
+        
+        <input type="button" id="search-exercise" class="bg-orange-500 hover:bg-black text-white font-bold py-2 px-4" value="Add Exercise!">
+    </div>
+    <br>
+
+    <div id="exercise-list">
+    </div>
+
+
+
+    <br><br><br>
+
+    <form method="POST" action="">
+        <div>
+            <input type="submit" id="finish-workout" class="bg-orange-500 hover:bg-black text-white font-bold py-2 px-4" value="Finish workout!">
+        </div>
+    </form>
+
+</div>
+
+<script defer src="../javascripts/index.js"></script>

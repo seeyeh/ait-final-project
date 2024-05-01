@@ -6,6 +6,8 @@ import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url';
 
+import ejs from 'ejs';
+
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,18 +56,24 @@ const exercises = [
     {title: "deadlift", bestWeight: 115}
 ]
 
-app.set('view engine', 'hbs');
+// HBS
+// app.set('view engine', 'hbs')
+
+// HTML
+app.set('view engine','html');
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html',ejs.renderFile);
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
 app.use(express.json());
 
 app.get('/', function(req,res){
-    res.render('index',{'workouts':workouts});
+    res.render('index');
 })
 
 app.get('/create', function(req,res){
-    res.render('create',{'exercises':exercises});
+    res.render('create');
 })
 
 app.post('/create', async function(req,res){
