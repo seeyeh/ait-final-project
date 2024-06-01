@@ -9,7 +9,7 @@ Once they've started a workout, they can input the number of reps/weight they pe
 
 ## Data Model
 
-The application will store Exercises and Atempts
+The application will store Exercises and Attempts
 
 * a user can have multiple exercises (via references)
 * an exercises can have multiple attempts (via references)
