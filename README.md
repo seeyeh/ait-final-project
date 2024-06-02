@@ -94,7 +94,6 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 ## [Link to Initial Main Project File](app.mjs) 
 
 
-
 ## Annotations / References Used
 
 1. [tailwind css documentation](https://tailwindcss.com/docs/installation) - (add link to source code that was based on this)
