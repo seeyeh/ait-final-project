@@ -16,6 +16,7 @@ const Attempt = mongoose.model('Attempt');
 const Exercise = mongoose.model('Exercise');
 const Workout = mongoose.model('Workout');
 
+console.log("MERGE TESTING")
 // const newExercise = new Exercise({
 //     exerciseName: "Bench Press",
 //     lastDone: "",
