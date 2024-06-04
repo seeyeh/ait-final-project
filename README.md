@@ -1,6 +1,5 @@
 # Work it Out! 
-MERGE TESTING 2
-MERGE TESTING AGAIN
+
 ## Overview
 
 Work it Out is a web app that allows users to record their workout data! Users can add exercises they are planning to do, and record the number of reps they perform, and the weight with which they perform it.
@@ -100,8 +99,3 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 1. [tailwind css documentation](https://tailwindcss.com/docs/installation) - (add link to source code that was based on this)
 2. [tailwind css documentation on buttons](https://v1.tailwindcss.com/components/buttons) - 
 3. [various notes from class slides on mongoDB](https://cs.nyu.edu/courses/spring24/CSCI-UA.0467-001/_site/)
-
-Testing
-
-MERGE TESTING 1
-bebe testing
