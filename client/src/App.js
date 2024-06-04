@@ -10,14 +10,27 @@ function App() {
     ).then(
       data => {
         setBackendData(data);
+        console.log(JSON.stringify(data))
       }
     )
   }, [])
 
+  let attempts;
+  if(backendData.attempts) {
+    console.log(backendData.attempts);
+    attempts = backendData.attempts.map((attempt) => {
+      return (<div>
+        <h1>{attempt.lastDone}</h1>
+        <p>{JSON.stringify(attempt.sets)}</p>
+      </div>)
+    })
+    console.log(attempts)
+  }
+  
   return (
     <div>
-      {(typeof backendData.testing === 'undefined') ? (<p>Loading...</p>) : (
-        JSON.stringify(backendData))}
+      {(typeof backendData === 'undefined') ? (<p>Loading...</p>) : (
+        attempts)}
     </div>
   )
 }
