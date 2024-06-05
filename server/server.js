@@ -1,19 +1,25 @@
-import './config.js'
-import './db.js'
+import './config/config.js'
+import connectDB from './config/db.js'
 
-import express from 'express'
+// schemas are registered inside independent files
+import Exercise from './models/Exercise.js'
+import Attempt from './models/Attempt.js'
+import Workout from './models/Workout.js'
+
+import Express from 'express'
 import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url';
 
-const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const app = Express();                      // actual server object
+const PORT = process.env.PORT || 5001    
 
-const Attempt = mongoose.model('Attempt');
-const Exercise = mongoose.model('Exercise');
-const Workout = mongoose.model('Workout');
+const __filename = fileURLToPath(import.meta.url);      // gets filename of server.js manually (es module)
+const __dirname = path.dirname(__filename);             // gets parent directory of server.js (es module)
 
+connectDB();
+
+// app.use('/', Express.static(path.join(__dirname, '/public')));  // look in public directory for static files
 
 app.get('/test', async (req, res) => {
     try{
@@ -25,6 +31,13 @@ app.get('/test', async (req, res) => {
     }
 })
 
-app.listen(5001, ()=> {
-    console.log('Server running on port 5001')
+mongoose.connection.once('open', ()=>{
+    console.log('Connected to MongoDB');
+    app.listen(5001, ()=> {
+        console.log('Server running on port 5001')
+    });
+})
+
+mongoose.connection.on('error', (err) => {
+    console.log(err);
 })
