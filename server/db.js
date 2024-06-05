@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import './config.mjs'
+import './config.js'
 
 mongoose.connect(process.env.DSN);
 

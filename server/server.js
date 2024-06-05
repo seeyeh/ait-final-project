@@ -1,5 +1,5 @@
-import './config.mjs'
-import './db.mjs'
+import './config.js'
+import './db.js'
 
 import express from 'express'
 import mongoose from 'mongoose'
