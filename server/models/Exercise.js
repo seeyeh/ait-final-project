@@ -15,7 +15,7 @@ const ExerciseSchema = new mongoose.Schema({
     video: String,
     photos: [String],
     substitutions: [mongoose.Schema.Types.ObjectId],
-    history: [Attempt],
+    history: [Attempt.schema],
     stats: Map
 })
 
