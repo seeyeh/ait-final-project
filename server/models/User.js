@@ -9,12 +9,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: /^\S*$/,
+        match: /^\S*$/,     // no whitespace
     },
     password: {
         type: String,
         required: true,
         trim: true,
+        match: /^\S*$/,     // no whitespace
     },
     exerciseNames: [String],
     templateNames: [String],
@@ -22,25 +23,57 @@ const UserSchema = new mongoose.Schema({
     stats: Map
 });
 
+/**
+ * Search for user's templates by template name
+ * 
+ * @param {String} name
+ * @returns promise resolving to template document
+ */
 UserSchema.methods.getTemplateByName = function (name) {
     return Template.findOne({parentUser: this._id, name: name});
 }
 
+/**
+ * Search for user's splits by split name
+ * 
+ * @param {String} name
+ * @returns promise resolving to split document
+ */
 UserSchema.methods.getSplitByName = function (name) {
     return Split.findOne({parentUser: this._id, name: name});
 }
 
+/**
+ * Search for user's exercises by exercise name
+ * 
+ * @param {String} name
+ * @returns promise resolving to exercise document
+ */
 UserSchema.methods.getExerciseByName = function (name) {
     return Exercise.findOne({parentUser: this._id, name: name});
 }
 
+/**
+ * Search for user's workouts by workout name
+ * 
+ * @param {String} name
+ * @returns promise resolving to workout document
+ */
 UserSchema.methods.getWorkoutByName = function (name) {
     return Workout.findOne({parentUser: this._id, name: name});
 }
 
+/**
+ * Creates a new template under parent user
+ * 
+ * @param {String} name
+ * @param {Array<Exercise>} [exercises] 
+ * @param {String} [desc]
+ * @returns new template document
+ */
 UserSchema.methods.createTemplate = async function(name, exercises = [], desc) {
     const newName = name.trim();
-    if(this.templateNames.includes(newName))
+    if(this.templateNames.includes(newName))    // template names must be unique
         throw new Error(`Template ${newName} already exists`);
     
     return new Template({
@@ -51,9 +84,17 @@ UserSchema.methods.createTemplate = async function(name, exercises = [], desc) {
     });
 }
 
+/**
+ * Creates a new split under parent user
+ * 
+ * @param {String} name
+ * @param {Array<Template>} [templates]
+ * @param {String} [desc]
+ * @returns new split document
+ */
 UserSchema.methods.createSplit = function(name, templates = [], desc) {
     const newName = name.trim(); 
-    if(this.splitNames.includes(newName))
+    if(this.splitNames.includes(newName))       // split names must be unique
         throw new Error(`Split ${newName} already exists`);
 
     return new Split({
@@ -64,6 +105,17 @@ UserSchema.methods.createSplit = function(name, templates = [], desc) {
     });
 }
 
+/**
+ * Creates a new exercise under parent user
+ * 
+ * @param {String} name
+ * @param {String} [desc]
+ * @param {Array<String>} [notes]
+ * @param {String} [video] video URL
+ * @param {Array<String>} [photos] photo URLs
+ * @param {Array<Exercise>} [substitutions] 
+ * @returns new exercise document
+ */
 UserSchema.methods.createExercise = function(name, desc, notes, video, photos, substitutions = []) {
     const newName = name.trim().toLowerCase();
     if(this.exerciseNames.includes(newName))
@@ -80,6 +132,10 @@ UserSchema.methods.createExercise = function(name, desc, notes, video, photos, s
     });
 }
 
+/**
+ * Saves template to DB, adds to user template names
+ * @param {Template} template 
+ */
 UserSchema.methods.saveTemplate = async function(template) {
     try {
         await template.save();
@@ -89,6 +145,10 @@ UserSchema.methods.saveTemplate = async function(template) {
     }
 }
 
+/**
+ * Saves split to DB, adds to user split names
+ * @param {Split} split 
+ */
 UserSchema.methods.saveSplit = async function(split) {
     try {
         await split.save();
@@ -98,6 +158,10 @@ UserSchema.methods.saveSplit = async function(split) {
     }
 }
 
+/**
+ * Saves exercise to DB, adds to user exercise names
+ * @param {Exercise} exercise 
+ */
 UserSchema.methods.saveExercise = async function(exercise) {
     try {
         await exercise.save();
@@ -107,6 +171,12 @@ UserSchema.methods.saveExercise = async function(exercise) {
     }
 }
 
+/**
+ * Creates and saves workout to DB
+ * @param {Array<Attempt>} attempts 
+ * @param {String} [name] 
+ * @param {String} [journal] 
+ */
 UserSchema.methods.createAndSaveWorkout = function(attempts, name, journal) {
     const workout = new Workout({
         parentUser: user._id,

@@ -34,10 +34,20 @@ const WorkoutSchema = new mongoose.Schema({
     journal: String
 })
 
+/**
+ * Queries workouts by user id
+ * @param {ObjectId} uid 
+ * @returns mongoose query for user
+ */
 WorkoutSchema.query.byUser = function(uid) {
     return this.where({parentUser: uid});
 }
 
+/**
+ * 
+ * @param {ObjectId} uid 
+ * @returns promise resolving to user
+ */
 WorkoutSchema.statics.getUserWorkouts = function (uid) {
     return this.find({parentUser: uid});
 }

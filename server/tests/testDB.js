@@ -11,6 +11,7 @@ export default async function testDB() {
     const user = await User.findOne({username: 'user1'});
     // const row = await user.getExerciseByName('db row');
     const workouts = await Workout.getUserWorkouts(user._id);
+    
     console.log(workouts)
     // const attempt = new Attempt({ // new exercise
     //     name: 'Rows',
