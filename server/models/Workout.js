@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Attempt from './Attempt'
+import Attempt from './Attempt.js'
 
 const WorkoutSchema = new mongoose.Schema({
     name: {

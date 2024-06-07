@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Attempt from './Attempt'
+import Attempt from './Attempt.js'
 
 const ExerciseSchema = new mongoose.Schema({
     name: {
@@ -7,7 +7,6 @@ const ExerciseSchema = new mongoose.Schema({
         required: true,
         lowercase: true,
         trim: true,
-        unique: true,
         get: str => str.charAt(0).toUpperCase() + str.slice(1)  // gets capitalized, ex. push-ups -> Push-ups
     },
     description: String,

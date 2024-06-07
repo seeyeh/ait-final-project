@@ -5,7 +5,7 @@ const TemplateSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true,
+        // unique: true,
         default: "My Workout Template"
     },
     description: String,
