@@ -38,43 +38,38 @@ UserSchema.methods.getWorkoutByName = function (name) {
     return Workout.findOne({parentUser: this._id, name: name});
 }
 
-UserSchema.methods.createTemplate = function(name, desc, exercises) {
+UserSchema.methods.createTemplate = async function(name, exercises = [], desc) {
     const newName = name.trim();
     if(this.templateNames.includes(newName))
         throw new Error(`Template ${newName} already exists`);
     
-    const newTemplate = new Template({
+    return new Template({
         parentUser: this._id,
         name: newName,
         description: desc,
         exercises: exercises.map(exercise => exercise._id)
     });
-
-    this.templateNames.push(newName);
-    newTemplate.save();
 }
 
-UserSchema.methods.createSplit = function(name, desc, templates) {
+UserSchema.methods.createSplit = function(name, templates = [], desc) {
     const newName = name.trim(); 
     if(this.splitNames.includes(newName))
         throw new Error(`Split ${newName} already exists`);
-    const newSplit = new Split({
+
+    return new Split({
         parentUser: this._id,
         name: newName,
         description: desc,
         templates: templates.map(template => template._id)
     });
-
-    this.splitNames.push(newName);
-    newSplit.save();
 }
 
-UserSchema.methods.createExercise = function(name, desc, notes, video, photos, substitutions) {
+UserSchema.methods.createExercise = function(name, desc, notes, video, photos, substitutions = []) {
     const newName = name.trim().toLowerCase();
     if(this.exerciseNames.includes(newName))
         throw new Error(`Exercise ${name.trim()} already exists`);
     
-    const newExercise = new Exercise({
+    return new Exercise({
         parentUser: this._id,
         name: newName,
         description: desc,
@@ -83,24 +78,45 @@ UserSchema.methods.createExercise = function(name, desc, notes, video, photos, s
         photos: photos,
         substitutions: substitutions.map(exercise => exercise._id)
     });
-
-    this.exerciseNames.push(newName);
-    newExercise.save();
 }
 
-// UserSchema.methods.addExerciseToTemplate = function (exerciseId, templateName) {
-//     const template = this.getTemplateByName(templateName);
-//     if(!template) throw new Error(`Template ${templateName} not found`);
-//     template.exercises.push(exerciseId);
-// }
+UserSchema.methods.saveTemplate = async function(template) {
+    try {
+        await template.save();
+        this.templateNames.push(template.name);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
-// UserSchema.methods.addTemplateToSplit = function (templateId, splitName) {
-//     const split = this.getSplitByName(splitName);
-//     if(!split) throw new Error(`Split ${splitName} not found`);
-//     split.templates.push(templateId);
-// }
+UserSchema.methods.saveSplit = async function(split) {
+    try {
+        await split.save();
+        this.splitNames.push(split.name);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
+UserSchema.methods.saveExercise = async function(exercise) {
+    try {
+        await exercise.save();
+        this.exerciseNames.push(exercise.name);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
+UserSchema.methods.createAndSaveWorkout = function(attempts, name, journal) {
+    const workout = new Workout({
+        parentUser: user._id,
+        activites: attempts,
+        name: name,
+        journal: journal
+    });
+
+    workout.save();
+}
 
 
 export default mongoose.model('User', UserSchema);
