@@ -1,15 +1,29 @@
 import mongoose from 'mongoose'
+import Attempt from './Attempt.js'
 
 const ExerciseSchema = new mongoose.Schema({
-    exerciseName: String,
-    lastAttempt: {
+    parentUser: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Attempt'
+        ref: 'User',
+        required: true
     },
-    attempts: [{
+    name: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true,
+        get: str => str.charAt(0).toUpperCase() + str.slice(1)  // gets capitalized, ex. push-ups -> Push-ups
+    },
+    description: String,
+    notes: [String],
+    video: String,
+    photos: [String],
+    substitutions: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Attempt'
-    }]
+        ref: 'Exercise'
+    }],
+    history: [Attempt.schema],
+    stats: Map
 })
 
 export default mongoose.model('Exercise', ExerciseSchema);;

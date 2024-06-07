@@ -1,10 +1,14 @@
 import './config/config.js'
 import connectDB from './config/db.js'
+import testDB from './tests/testDB.js'
 
 // schemas are registered inside independent files
 import Exercise from './models/Exercise.js'
 import Attempt from './models/Attempt.js'
 import Workout from './models/Workout.js'
+import Template from './models/Template.js'
+import Split from './models/Split.js'
+import User from './models/User.js'
 
 import Express from 'express'
 import mongoose from 'mongoose'
@@ -60,6 +64,8 @@ app.all('*',(req,res)=>{
 connectDB();
 
 // app.use('/', Express.static(path.join(__dirname, '/public')));  // look in public directory for static files
+
+testDB();
 
 app.get('/test', async (req, res) => {
     try{
