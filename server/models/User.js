@@ -16,32 +16,91 @@ const UserSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    exercises: [Exercise.schema],
-    workouts: [Workout.schema],
-    templates: [Template.schema],
-    splits: [Split.schema],
+    exerciseNames: [String],
+    templateNames: [String],
+    splitNames: [String],
     stats: Map
 });
 
 UserSchema.methods.getTemplateByName = function (name) {
-    return this.templates.find(template => template.name == name);
-}
-
-UserSchema.methods.addExerciseToTemplate = function (exerciseId, templateName) {
-    const template = this.getTemplateByName(templateName);
-    if(!template) throw new Error(`Template ${templateName} not found`);
-    template.exercises.push(exerciseId);
+    return Template.findOne({parentUser: this._id, name: name});
 }
 
 UserSchema.methods.getSplitByName = function (name) {
-    return this.splits.find(split => split.name === name);
+    return Split.findOne({parentUser: this._id, name: name});
 }
 
-UserSchema.methods.addTemplateToSplit = function (templateId, splitName) {
-    const split = this.getSplitByName(splitName);
-    if(!split) throw new Error(`Split ${splitName} not found`);
-    split.templates.push(templateId);
+UserSchema.methods.getExerciseByName = function (name) {
+    return Exercise.findOne({parentUser: this._id, name: name});
 }
+
+UserSchema.methods.getWorkoutByName = function (name) {
+    return Workout.findOne({parentUser: this._id, name: name});
+}
+
+UserSchema.methods.createTemplate = function(name, desc, exercises) {
+    const newName = name.trim();
+    if(this.templateNames.includes(newName))
+        throw new Error(`Template ${newName} already exists`);
+    
+    const newTemplate = new Template({
+        parentUser: this._id,
+        name: newName,
+        description: desc,
+        exercises: exercises.map(exercise => exercise._id)
+    });
+
+    this.templateNames.push(newName);
+    newTemplate.save();
+}
+
+UserSchema.methods.createSplit = function(name, desc, templates) {
+    const newName = name.trim(); 
+    if(this.splitNames.includes(newName))
+        throw new Error(`Split ${newName} already exists`);
+    const newSplit = new Split({
+        parentUser: this._id,
+        name: newName,
+        description: desc,
+        templates: templates.map(template => template._id)
+    });
+
+    this.splitNames.push(newName);
+    newSplit.save();
+}
+
+UserSchema.methods.createExercise = function(name, desc, notes, video, photos, substitutions) {
+    const newName = name.trim().toLowerCase();
+    if(this.exerciseNames.includes(newName))
+        throw new Error(`Exercise ${name.trim()} already exists`);
+    
+    const newExercise = new Exercise({
+        parentUser: this._id,
+        name: newName,
+        description: desc,
+        notes: notes,
+        video: video,
+        photos: photos,
+        substitutions: substitutions.map(exercise => exercise._id)
+    });
+
+    this.exerciseNames.push(newName);
+    newExercise.save();
+}
+
+// UserSchema.methods.addExerciseToTemplate = function (exerciseId, templateName) {
+//     const template = this.getTemplateByName(templateName);
+//     if(!template) throw new Error(`Template ${templateName} not found`);
+//     template.exercises.push(exerciseId);
+// }
+
+// UserSchema.methods.addTemplateToSplit = function (templateId, splitName) {
+//     const split = this.getSplitByName(splitName);
+//     if(!split) throw new Error(`Split ${splitName} not found`);
+//     split.templates.push(templateId);
+// }
+
+
 
 
 export default mongoose.model('User', UserSchema);

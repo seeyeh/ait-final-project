@@ -1,5 +1,6 @@
 import './config/config.js'
 import connectDB from './config/db.js'
+import testDB from './tests/testDB.js'
 
 // schemas are registered inside independent files
 import Exercise from './models/Exercise.js'
@@ -23,6 +24,8 @@ const __dirname = path.dirname(__filename);             // gets parent directory
 connectDB();
 
 // app.use('/', Express.static(path.join(__dirname, '/public')));  // look in public directory for static files
+
+testDB();
 
 app.get('/test', async (req, res) => {
     try{

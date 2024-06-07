@@ -1,6 +1,11 @@
 import mongoose from 'mongoose'
 
 const SplitSchema = new mongoose.Schema({
+    parentUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     name: {
         type: String,
         required: true,
@@ -10,8 +15,14 @@ const SplitSchema = new mongoose.Schema({
     },
     description: String,
     templates: {
-        type: [mongoose.Schema.Types.ObjectId],
-        required: true
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Template'
+        }],
+        validate: {
+            validator: v => v.length,
+            message: 'Must contain at least one template'
+        }
     }
 });
 

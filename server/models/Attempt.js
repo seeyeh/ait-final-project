@@ -1,4 +1,19 @@
 import mongoose from 'mongoose'
+const SetSchema = new mongoose.Schema({
+    reps: { 
+        type: Number,
+        required: true,
+        min: 0,
+        validate : {
+            validator : Number.isInteger,
+            message   : '{VALUE} is not an integer value'
+        }
+    },
+    weight: { 
+        type: Number, 
+        required: true 
+    }
+})
 
 const AttemptSchema = new mongoose.Schema({
     date: {
@@ -11,18 +26,7 @@ const AttemptSchema = new mongoose.Schema({
         ref: 'Exercise',
         immutable: true,
     },
-    sets: [{
-        reps: { 
-            type: Number,
-            required: true,
-            min: 0,
-            validate : {
-                validator : Number.isInteger,
-                message   : '{VALUE} is not an integer value'
-            }
-        },
-        weight: { type: Number, required: true }
-    }],
+    sets: [SetSchema],
     journal: String
 });
 

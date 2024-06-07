@@ -2,6 +2,11 @@ import mongoose from 'mongoose'
 import Attempt from './Attempt.js'
 
 const WorkoutSchema = new mongoose.Schema({
+    parentUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     name: {
         type: String,
         required: true,
@@ -20,9 +25,21 @@ const WorkoutSchema = new mongoose.Schema({
         type: [Attempt.schema],
         required: true,
         immutable: true,
+        validate: {
+            validator: v => v.length,
+            message: 'Must contain at least one activity'
+        }
     }, // an array of references to Exercise documents
     stats: Map,
     journal: String
 })
+
+WorkoutSchema.query.byUser = function(uid) {
+    return this.where({parentUser: uid});
+}
+
+WorkoutSchema.statics.getUserWorkouts = function (uid) {
+    return this.find({parentUser: uid});
+}
 
 export default mongoose.model('Workout', WorkoutSchema);;
