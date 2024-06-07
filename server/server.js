@@ -11,6 +11,11 @@ import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url';
 import router from './routes/root.js';
+import { logger } from './middleware/logger.js';
+import errorHandler from './middleware/errorHandler.js';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import corsOptions from './config/corsOptions.js';
 
 const app = Express();                      // actual server object
 const PORT = process.env.PORT || 5001    
@@ -18,11 +23,21 @@ const PORT = process.env.PORT || 5001
 const __filename = fileURLToPath(import.meta.url);      // gets filename of server.js manually (es module)
 const __dirname = path.dirname(__filename);             // gets parent directory of server.js (es module)
 
+
+// MIDDLEWARE
+
 // app.use(express.urlencoded({extended: false}));
-// app.use(express.static('public'));
-// app.use(express.json());
+
+app.use(logger);
+
+app.use(Express.json());    // allows app to receive and parse JSON data
+
+app.use(cookieParser());
+
+app.use(cors(corsOptions));    // essentially makes our api available to the public; other origins can request resources from our api
 
 app.use('/', Express.static(path.join(__dirname, '/public'))); // telling express where to find static files like CSS or an image
+// also does the same thing: app.use(Express.static('public');
 
 app.use('/', router);
 
@@ -40,6 +55,8 @@ app.all('*',(req,res)=>{
     }
 })
 
+
+
 connectDB();
 
 // app.use('/', Express.static(path.join(__dirname, '/public')));  // look in public directory for static files
@@ -53,6 +70,8 @@ app.get('/test', async (req, res) => {
         console.log(e);
     }
 })
+
+app.use(errorHandler);
 
 mongoose.connection.once('open', ()=>{
     console.log('Connected to MongoDB');
