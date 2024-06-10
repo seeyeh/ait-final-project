@@ -16,6 +16,7 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import router from './routes/root.js';
 import usersRouter from './routes/userRoutes.js'
+import attemptsRouter from './routes/attemptRoutes.js'
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -46,6 +47,7 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 
 app.use('/', router);
 app.use('/users', usersRouter);
+app.use('/attempts', attemptsRouter);
 
 // A 404 catch-all for anything that doesn't have a defined route
 app.all('*',(req,res)=>{
