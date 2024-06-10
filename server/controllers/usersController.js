@@ -94,7 +94,21 @@ const updateUser = asyncHandler(async (req,res) => {
 // @route DELETE /users
 // @access Private
 const deleteUser = asyncHandler(async (req,res) => {
-
+    const { id } = req.body;
+    if (!id) {
+        return res.status(400).json({ message: 'User ID Required'});
+    }
+    const splits = await Split.findOne({ parentUser: id }).lean().exec();
+    if (splits?.length) {   // '?.' thing is optional chaining! "Expression short-circuits with a return value of undefined instead of causing error if reference is undefinned/null"
+        return res.status(400).json({ message: 'User has assigned splits' }); // I think this is precaution for if we delete user that has lots of other docs connected to it
+    }
+    const user = await.User.findById(id).exec();
+    if (!user) {
+        return res.status(400).json({ message:'User not found' });
+    }
+    const result = await user.deleteOne() // result holds deleted user's information
+    const reply = `Username ${result.username} with ID ${result._id} deleted`;
+    res.json(reply);
 })
 
 export {
