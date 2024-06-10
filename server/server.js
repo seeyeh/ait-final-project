@@ -15,6 +15,7 @@ import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url';
 import router from './routes/root.js';
+import usersRouter from './routes/userRoutes.js'
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -44,6 +45,7 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 // also does the same thing: app.use(Express.static('public');
 
 app.use('/', router);
+app.use('/users', usersRouter);
 
 // A 404 catch-all for anything that doesn't have a defined route
 app.all('*',(req,res)=>{
@@ -65,7 +67,7 @@ connectDB();
 
 // app.use('/', Express.static(path.join(__dirname, '/public')));  // look in public directory for static files
 
-testDB();
+// testDB();
 
 app.get('/test', async (req, res) => {
     try{

@@ -1,5 +1,5 @@
-import User from '../models/User';
-import Split from '..models/Split';
+import User from '../models/User.js';
+import Split from '../models/Split.js';
 import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcrypt';
 
@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 // @access Private
 const getAllUsers = asyncHandler(async (req,res) => {
     const users = await User.find().select('-password').lean(); // retrieves a User doc
-    if(!users){
+    if(!users?.length){
         return res.status(400).json({message:'No users found'});
     }
     res.json(users);
@@ -20,8 +20,8 @@ const getAllUsers = asyncHandler(async (req,res) => {
 const createNewUser = asyncHandler(async (req,res) => {
     const { username, password } = req.body
 
-    // Confirm data
-    if(!username || !password) {
+    // Confirm data (both username and password need to be in request body)
+    if(!username || !password) {  
         return res.status(400).json({ message: 'All fields are required'});
     }
 
@@ -55,26 +55,24 @@ const createNewUser = asyncHandler(async (req,res) => {
 // @access Private
 const updateUser = asyncHandler(async (req,res) => {
     const { id, username, password, exerciseNames, templateNames, splitNames, stats } = req.body;
-    // Confirm data
-    if(!username || !Array.isArray(exerciseNames) || !exerciseNames.length ||
-    !Array.isArray(templateNames) || !templateNames.length ||
-    !Array.isArray(splitNames) || !splitNames.length){
-        return res.status(400).json({ message: 'All fields are required' });
+    // Confirm data (at a minimum, id and username have to be in req body)
+    if(!id || !username){
+        return res.status(400).json({ message: 'ID and username fields are required' });
     }
-    const user = await User.findById(id).exec();
+    const user = await User.findById(id).exec();    // Get the actual specific User document we want to update and save by ID
     if (!user) {
         return res.status(400).json({ message: 'User not found' });
     }
     // Check for duplicate
-    const duplicate = await User.findOne({ username }).lean().exec();
+    const duplicate = await User.findOne({ username }).lean().exec(); 
     // Allow updates to the original user
-    if (duplicate && duplicate?._id.toString() !== id) {  // username already exists with a User document that is NOT our user; so this username is a duplicate, a no no!
+    if (duplicate && duplicate?._id.toString() !== id) {  // requested username already exists with a User document that is NOT our user; so a no no, we don't want two users w same username!
         return res.status(409).json({ message: 'Duplicate username' })
     }
-    if(usernames){  // if request has a requested new username, then update it
-        user.username = username;
-    }
-    if(exerciseNames){  // "" new exerciseNames list (new entries)
+
+    user.username = username;
+    
+    if(exerciseNames){  // if request contains a new exerciseNames list (new entries) to update the document's exerciseNames list with
         user.exerciseNames = exerciseNames;
     }
     if(templateNames){  // etc.
@@ -95,23 +93,23 @@ const updateUser = asyncHandler(async (req,res) => {
 // @access Private
 const deleteUser = asyncHandler(async (req,res) => {
     const { id } = req.body;
-    if (!id) {
+    if (!id) {  // Request must have an ID bc we need ID to find the User document to delete
         return res.status(400).json({ message: 'User ID Required'});
     }
-    const splits = await Split.findOne({ parentUser: id }).lean().exec();
+    const splits = await Split.findOne({ parentUser: id }).lean().exec();   // Find Split documents whose parentUser is the User we want to delete; if there is one, error - don't delete User!
     if (splits?.length) {   // '?.' thing is optional chaining! "Expression short-circuits with a return value of undefined instead of causing error if reference is undefinned/null"
         return res.status(400).json({ message: 'User has assigned splits' }); // I think this is precaution for if we delete user that has lots of other docs connected to it
     }
-    const user = await.User.findById(id).exec();
-    if (!user) {
+    const user = await User.findById(id).exec();
+    if (!user) {    // If no User document with requested ID
         return res.status(400).json({ message:'User not found' });
     }
-    const result = await user.deleteOne() // result holds deleted user's information
+    const result = await user.deleteOne() // deletes User document; result holds deleted user's information
     const reply = `Username ${result.username} with ID ${result._id} deleted`;
     res.json(reply);
 })
 
-export {
+export default {
     getAllUsers,
     createNewUser,
     updateUser,

@@ -1,12 +1,12 @@
 import Express from 'express';
 import { fileURLToPath } from 'url';
-const router = Express.Router()
+const usersRouter = Express.Router()
 import usersController from '../controllers/usersController.js'
 
-router.route('/')
+usersRouter.route('/')
     .get(usersController.getAllUsers)
     .post(usersController.createNewUser)
-    .patch()
-    .delete()
+    .patch(usersController.updateUser)
+    .delete(usersController.deleteUser)
 
-export default router;
+export default usersRouter;
