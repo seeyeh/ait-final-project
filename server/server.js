@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url';
 import router from './routes/root.js';
 import usersRouter from './routes/userRoutes.js'
 import attemptsRouter from './routes/attemptRoutes.js'
+import exercisesRouter from './routes/exerciseRoutes.js'
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -32,7 +33,7 @@ const __dirname = path.dirname(__filename);             // gets parent directory
 
 // MIDDLEWARE
 
-// app.use(express.urlencoded({extended: false}));
+app.use(Express.urlencoded({extended: false}));
 
 app.use(logger);
 
@@ -48,6 +49,7 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 app.use('/', router);
 app.use('/users', usersRouter);
 app.use('/attempts', attemptsRouter);
+app.use('/exercises', exercisesRouter);
 
 // A 404 catch-all for anything that doesn't have a defined route
 app.all('*',(req,res)=>{

@@ -7,6 +7,21 @@ import asyncHandler from 'express-async-handler';
 // @route GET /attempts
 // @access Private
 const getAllAttempts = asyncHandler(async (req,res) => {
+    const { exerciseID } = req.query;
+    if(exerciseID){ // if specified exerciseID, look for all attempts of that Exercise
+        const attempts = await Attempt.find({ 'exercise': exerciseID }).lean();
+        if(!attempts?.length){
+            return res.status(400).json({message:`No attempts with exerciseID ${exerciseID} found`});
+        }
+        res.json(attempts);
+    }
+    else { // if no specified exerciseID, just send back all attempts ever
+        const attempts = await Attempt.find().lean();
+        if(!attempts?.length){
+            return res.status(400).json({message:`No attempts found`});
+        }
+        res.json(attempts);
+    }
 })
 
 // @desc Create new attempt
