@@ -1,11 +1,27 @@
 import User from '../models/User.js';
 import Attempt from '../models/Attempt.js';
 import asyncHandler from 'express-async-handler';
+import Exercise from '../models/Exercise.js';
 
 // @desc Get a specific exercise by quering through name or get ALL exercises
 // @route GET /exercises
 // @access Private
 const getExercise = asyncHandler(async (req,res) => {
+    const { name } = req.query; // extract key/value pair of 'name' key from query string
+    if(name){
+        const exercise = await Exercise.find({ 'name': name }).lean();
+        if(!exercise?.length){
+            return res.status(400).json({ message: `No exercise found`});
+        }
+        res.json(exercise);
+    }
+    else{
+        const exercise = await Exercise.find({}).lean();
+        if(!exercise?.length){
+            return res.status(400).json({ message: `No exercise found`});
+        }
+        res.json(exercise);
+    }
 })
 
 // @desc Create new exercise
