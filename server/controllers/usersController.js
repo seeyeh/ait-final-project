@@ -96,10 +96,13 @@ const deleteUser = asyncHandler(async (req,res) => {
     if (!id) {  // Request must have an ID bc we need ID to find the User document to delete
         return res.status(400).json({ message: 'User ID Required'});
     }
+
     const splits = await Split.findOne({ parentUser: id }).lean().exec();   // Find Split documents whose parentUser is the User we want to delete; if there is one, error - don't delete User!
     if (splits?.length) {   // '?.' thing is optional chaining! "Expression short-circuits with a return value of undefined instead of causing error if reference is undefinned/null"
         return res.status(400).json({ message: 'User has assigned splits' }); // I think this is precaution for if we delete user that has lots of other docs connected to it
     }
+    // TODO: write similar code for the other documents that a User is linked to
+
     const user = await User.findById(id).exec();
     if (!user) {    // If no User document with requested ID
         return res.status(400).json({ message:'User not found' });

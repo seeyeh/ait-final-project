@@ -163,12 +163,12 @@ UserSchema.methods.saveSplit = async function(split) {
  * @param {Exercise} exercise 
  */
 UserSchema.methods.saveExercise = async function(exercise) {
-    try {
+    // try {
         await exercise.save();
         this.exerciseNames.push(exercise.name);
-    } catch (err) {
-        console.error(err);
-    }
+    // } catch (err) {
+    //     console.error(err);
+    // }
 }
 
 /**
