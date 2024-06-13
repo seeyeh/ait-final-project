@@ -55,6 +55,36 @@ const createNewUser = asyncHandler(async (req,res) => {
 // @access Private
 const updateUser = asyncHandler(async (req,res) => {
     const { id, username, password, exerciseNames, templateNames, splitNames, stats } = req.body;
+
+
+    /* REFACTORED PATCH APPROACH
+
+    const {ops, path, data} = req.body;
+    
+    // Confirm data (at a minimum, id and username have to be in req body)
+    if(!path.id || !path.username){
+        return res.status(400).json({ message: 'ID and username fields are required' });
+    }
+    switch(ops) {
+        case "add":
+            switch(path.location)
+                case "split": user.splits.push(data); break;
+                case "template": user.templates.push(data); break;
+
+            OR 
+
+            if(data.split) user.splits.push(data.split)
+            if(data.template) user.templates.push(data.templates)
+            if(data.exercise) user.exercises.push(data.exercises)
+            
+        case "replace":
+            if(data.username) user.username = data.username
+            ...
+
+    }
+     
+    */
+
     // Confirm data (at a minimum, id and username have to be in req body)
     if(!id || !username){
         return res.status(400).json({ message: 'ID and username fields are required' });
