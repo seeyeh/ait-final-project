@@ -2,6 +2,8 @@ import User from '../models/User.js';
 import Attempt from '../models/Attempt.js';
 import asyncHandler from 'express-async-handler';
 import Exercise from '../models/Exercise.js';
+import mongoose from 'mongoose'
+const { ObjectId } = mongoose.Types;
 
 const ExerciseSchemaFields = Object.freeze({
     _id:            Symbol("_id"),
@@ -23,8 +25,8 @@ const getExercise = asyncHandler(async (req,res) => {
     if(!parentUser) return res.status(400).json({ message: 'parentUser field required'});
 
     // check if all fields of query are valid
-    for(let field of req.query) {
-        if(field in ExerciseSchemaFields === false) res.status(400).json({ message: 'Invalid query field'});
+    for(let field in req.query) {
+        if(field in ExerciseSchemaFields === false) return res.status(400).json({ message: `Invalid query field '${field}'`});
     }
 
     const exercise = await Exercise.find(req.query).lean();
@@ -44,6 +46,11 @@ const createNewExercise = asyncHandler(async (req,res) => {
     if(!parentUser || !name) {
         return res.status(400).json({ message: 'parentUser and name fields are required'});
     }
+    // check if all fields of body are valid
+    for(let field in req.body) {
+        if(field in ExerciseSchemaFields === false) return res.status(400).json({ message: `Invalid request field '${field}'`});
+    }
+
     // Check for duplicates
     const duplicate = await Exercise.findOne({ parentUser, name }).lean().exec();
     if(duplicate){ // if an exercise already exists with the same name
@@ -82,78 +89,91 @@ const updateExercise = asyncHandler(async (req,res) => {
 
     const { parentUser, name, patches} = req.body;
     // Confirm data (parentUser and name required)
-    if(!parentUser || !name) {
-        return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
-    }
+    if(!parentUser || !name) return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
 
     // get exercise to patch
     const exercise = await Exercise.findOne({parentUser, name});
-    if(!exercise){
-        return res.status(400).json({ message: `No exercise found`});
-    }
+    if(!exercise) return res.status(400).json({ message: `No exercise found`});
 
     for(let patch of patches) {
-        switch(patch.op) {
-            case 'add':
-                if(patch.path in ExerciseSchemaFields === false ) return res.status(400).json({ message: `Invalid patch path`});
-                break;
-            case 'remove':
-                break;
-            case 'replace':
-                break;
-            case 'test':
-                break;
-            default:
-                return res.status(400).json({ message: `Invalid patch operation`});
-        }
-    }
-    /* REFACTORED PATCH APPROACH
-    
-    const {ops, path, data} = req.body;
-    
-    // Confirm data (at a minimum, id and username have to be in req body)
-    if(!path.id || !path.username){
-        return res.status(400).json({ message: 'ID and username fields are required' });
-    }
-    switch(ops) {
-        case 'add':
-            switch(path.location)
-                case 'split': user.splits.push(data); break;
-                case 'template': user.templates.push(data); break;
+        const {path, op} = patch;
+        if(path in ExerciseSchemaFields === false || path === 'history') return res.status(400).json({ message: `Invalid patch path`});
 
-            OR 
-
-            if(data.split) user.splits.push(data.split)
-            if(data.template) user.templates.push(data.templates)
-            if(data.exercise) user.exercises.push(data.exercises)
-            
-        case 'replace':
-            if(data.username) user.username = data.username
-            ...
-
+        const {result, error} = await patchExercise(exercise, parentUser, op, path, patch.value);
+        if(error) return res.status(400).json({ message: error});
+        exercise[path] = result;
     }
-     
-    */
+
+    exercise.save();
+    res.json({message: `Successfully patched ${name}`})
 })
 
 // @desc Delete an exercise
 // @route DELETE /exercises
 // @access Private
 const deleteExercise = asyncHandler(async (req,res) => {
-    const { parentUser, name } = exerciseParams;
+    const { parentUser, name } = req.body;
     // Confirm data (parentUser and name required)
     if(!parentUser || !name) {
         return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
     }
 
     const exercise = await Exercise.findOne({parentUser, name});
-    if(!exercise?.length){
+    if(!exercise){
         return res.status(400).json({ message: `No exercise found`});
     }
 
-    const result = await exercise.deleteOne()
-    res.json(`Exercise ${result.name} deleted`);
+    const result = await exercise.deleteOne();
+    res.json({message: `Exercise ${name} deleted`});
 })
+
+async function patchExercise(exercise, parentUser, op, path, value) {
+    switch(op) {
+        // add operation for array fields (subs, notes, photos) except history
+        case 'add':
+            // validation: add operation must add string to an array
+            if(!Array.isArray(exercise[path])) return {error: `Invalid patch path, must be an array`};
+            if(typeof value !== 'string') return {error: `Invalid patch path, must be an array`};
+
+            if(path === 'substitutions') {
+                const subId = await Exercise.findOne({parentUser, name: value}).select('_id');
+
+                if(!subId) return {error: `Invalid patch value, substitution not found`};
+                if(exercise[path].includes(new ObjectId(subId))) return {error: `Invalid patch value, duplicate substitution`};
+
+                exercise[path].push(subId);
+            } else {
+                exercise[path].push(value);
+            }
+            break;
+        case 'remove':
+            // validation: remove operation must add string to an array
+            if(!Array.isArray(exercise[path])) return {error: `Invalid patch path, must be an array`};
+            if(typeof value !== 'string') return {error: `Invalid patch value, must be a string`};
+
+            if(path === 'substitutions') {
+                const subId = await Exercise.findOne({parentUser, name: value}).select('_id');
+                if(!subId) return {error: `Invalid patch value, substitution exercise not found`};
+
+                const subIndex = exercise[path].indexOf(new ObjectId(subId));
+                if(subIndex == -1) return {error: `Invalid patch value, value is not a substitution`};
+                exercise[path].splice(subIndex, 1);
+
+            } else {
+                const index = exercise[path].indexOf(value);
+                if(index == -1) return {error: `Invalid patch value, value not found`};
+                exercise[path].splice(index, 1);
+            }
+            break;
+        case 'replace':
+            break;
+        case 'test':
+            break;
+        default:
+            return {error: `Invalid patch operation`};
+    }
+    return {result: exercise[path]};
+}
 
 export default {
     getExercise,
