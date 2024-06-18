@@ -24,7 +24,7 @@ const getExercise = asyncHandler(async (req,res) => {
 
     // check if all fields of query are valid
     for(let field of req.query) {
-        if(!field in ExerciseSchemaFields) res.status(400).json({ message: 'Invalid query field'});
+        if(field in ExerciseSchemaFields === false) res.status(400).json({ message: 'Invalid query field'});
     }
 
     const exercise = await Exercise.find(req.query).lean();
@@ -77,6 +77,36 @@ const createNewExercise = asyncHandler(async (req,res) => {
 // @access Private
 const updateExercise = asyncHandler(async (req,res) => {
 
+    // req.body: {parentUser, name, [patches]}
+    // patch: {op, path, value} - add, remove, replace, test
+
+    const { parentUser, name, patches} = req.body;
+    // Confirm data (parentUser and name required)
+    if(!parentUser || !name) {
+        return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
+    }
+
+    // get exercise to patch
+    const exercise = await Exercise.findOne({parentUser, name});
+    if(!exercise){
+        return res.status(400).json({ message: `No exercise found`});
+    }
+
+    for(let patch of patches) {
+        switch(patch.op) {
+            case 'add':
+                if(patch.path in ExerciseSchemaFields === false ) return res.status(400).json({ message: `Invalid patch path`});
+                break;
+            case 'remove':
+                break;
+            case 'replace':
+                break;
+            case 'test':
+                break;
+            default:
+                return res.status(400).json({ message: `Invalid patch operation`});
+        }
+    }
     /* REFACTORED PATCH APPROACH
     
     const {ops, path, data} = req.body;
@@ -116,7 +146,7 @@ const deleteExercise = asyncHandler(async (req,res) => {
         return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
     }
 
-    const exercise = await Exercise.find(req.query);
+    const exercise = await Exercise.findOne({parentUser, name});
     if(!exercise?.length){
         return res.status(400).json({ message: `No exercise found`});
     }
