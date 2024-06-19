@@ -22,8 +22,7 @@ const ExerciseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Exercise'
     }],
-    history: [Attempt.schema],
-    stats: Map
+    history: [Attempt.schema]
 })
 
 export default mongoose.model('Exercise', ExerciseSchema);;

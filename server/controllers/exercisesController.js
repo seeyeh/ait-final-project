@@ -29,7 +29,7 @@ const getExercise = asyncHandler(async (req,res) => {
         if(field in ExerciseSchemaFields === false) return res.status(400).json({ message: `Invalid query field '${field}'`});
     }
 
-    const exercise = await Exercise.find(req.query).lean();
+    const exercise = await Exercise.find(req.query).lean().exec();
     if(!exercise?.length){
         return res.status(400).json({ message: `No exercise found`});
     }
@@ -60,7 +60,7 @@ const createNewExercise = asyncHandler(async (req,res) => {
     if(exerciseParams.substitutions) {
         exerciseParams.substitutions = await Promise.all(exerciseParams.substitutions.map(
             async (subName) => {
-                return Exercise.findOne({ parentUser, 'name': subName }).select('_id');
+                return Exercise.findOne({ parentUser, 'name': subName }).select('_id').exec();
             }
         ))         
         console.log(exerciseParams.substitutions);
@@ -92,7 +92,7 @@ const updateExercise = asyncHandler(async (req,res) => {
     if(!parentUser || !name) return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
 
     // get exercise to patch
-    const exercise = await Exercise.findOne({parentUser, name});
+    const exercise = await Exercise.findOne({parentUser, name}).exec();
     if(!exercise) return res.status(400).json({ message: `No exercise found`});
 
     for(let patch of patches) {
@@ -118,7 +118,7 @@ const deleteExercise = asyncHandler(async (req,res) => {
         return res.status(400).json({ message: 'parentUser and exercise name fields are required'});
     }
 
-    const exercise = await Exercise.findOne({parentUser, name});
+    const exercise = await Exercise.findOne({parentUser, name}).exec();
     if(!exercise){
         return res.status(400).json({ message: `No exercise found`});
     }
@@ -129,32 +129,32 @@ const deleteExercise = asyncHandler(async (req,res) => {
 
 async function patchExercise(exercise, parentUser, op, path, value) {
     switch(op) {
-        // add operation for array fields (subs, notes, photos) except history
+        // add/remove operation for array fields (subs, notes, photos) except history
         case 'add':
             // validation: add operation must add string to an array
             if(!Array.isArray(exercise[path])) return {error: `Invalid patch path, must be an array`};
-            if(typeof value !== 'string') return {error: `Invalid patch path, must be an array`};
+            if(typeof value !== 'string') return {error: `Invalid patch path, must be a string`};
 
             if(path === 'substitutions') {
-                const subId = await Exercise.findOne({parentUser, name: value}).select('_id');
-
+                // get mongo ids to store if modifying substitutions
+                const subId = await Exercise.findOne({parentUser, name: value}).select('_id').exec();
                 if(!subId) return {error: `Invalid patch value, substitution not found`};
                 if(exercise[path].includes(new ObjectId(subId))) return {error: `Invalid patch value, duplicate substitution`};
-
                 exercise[path].push(subId);
             } else {
                 exercise[path].push(value);
             }
             break;
+
         case 'remove':
             // validation: remove operation must add string to an array
             if(!Array.isArray(exercise[path])) return {error: `Invalid patch path, must be an array`};
             if(typeof value !== 'string') return {error: `Invalid patch value, must be a string`};
 
             if(path === 'substitutions') {
-                const subId = await Exercise.findOne({parentUser, name: value}).select('_id');
+                // get mongo ids to store if modifying substitutions
+                const subId = await Exercise.findOne({parentUser, name: value}).select('_id').exec();
                 if(!subId) return {error: `Invalid patch value, substitution exercise not found`};
-
                 const subIndex = exercise[path].indexOf(new ObjectId(subId));
                 if(subIndex == -1) return {error: `Invalid patch value, value is not a substitution`};
                 exercise[path].splice(subIndex, 1);
@@ -165,7 +165,20 @@ async function patchExercise(exercise, parentUser, op, path, value) {
                 exercise[path].splice(index, 1);
             }
             break;
+        
+        // replace operation for non-array fields (name, desc, video) except parentUser
         case 'replace':
+            // validation: replace operation cannot be used on arrays and value must be string
+            if(Array.isArray(exercise[path])) return {error: `Invalid patch path, cannot replace an array`};
+            if(typeof value !== 'string') return {error: `Invalid patch value, must be a string`};
+
+            if(path === 'name') {
+                // do not allow duplicate exercise names
+                const duplicate = await Exercise.findOne({parentUser, name: value}).exec();
+                if(duplicate && duplicate._id.toString() !== exercise.id) 
+                    return {error: `Invalid patch value, exercise name already exists`}
+            }
+            exercise[path] = value;
             break;
         case 'test':
             break;
