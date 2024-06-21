@@ -137,7 +137,7 @@ async function patchExercise(exercise, parentUser, op, path, value) {
     case 'add':
       // validation: add operation must add string to an array
       if (!Array.isArray(exercise[path])) return { error: `Invalid patch path, must be an array` };
-      if (typeof value !== 'string') return { error: `Invalid patch path, must be a string` };
+      if (typeof value !== 'string') return { error: `Invalid patch value, must be a string` };
 
       if (path === 'substitutions') {
         // get mongo ids to store if modifying substitutions
