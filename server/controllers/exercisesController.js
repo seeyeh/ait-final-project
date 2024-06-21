@@ -3,6 +3,7 @@ import Attempt from '../models/Attempt.js';
 import asyncHandler from 'express-async-handler';
 import Exercise from '../models/Exercise.js';
 import mongoose from 'mongoose';
+
 const { ObjectId } = mongoose.Types;
 
 const ExerciseSchemaFields = Object.freeze({
@@ -50,7 +51,7 @@ const createNewExercise = asyncHandler(async (req, res) => {
   // check if all fields of body are valid
   for (let field in req.body) {
     if (field in ExerciseSchemaFields === false)
-      return res.status(400).json({ message: `Invalid request field '${field}'` });
+      return res.status(400).json({ message: `Invalid input field '${field}'` });
   }
 
   // Check for duplicates
@@ -78,7 +79,7 @@ const createNewExercise = asyncHandler(async (req, res) => {
     res.status(201).json({ message: `New exercise ${name} created` });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ message: 'Invalid exercise data received' });
+    res.status(400).json({ message: `Invalid exercise data received: ${err}` });
   }
 });
 
@@ -127,7 +128,8 @@ const deleteExercise = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: `No exercise found` });
   }
 
-  const result = await exercise.deleteOne();
+  const { deletedCount } = await exercise.deleteOne();
+  if (deletedCount !== 1) return res.status(400).json({ message: `Exercise could not be deleted` });
   res.json({ message: `Exercise ${name} deleted` });
 });
 

@@ -68,8 +68,8 @@ UserSchema.methods.getWorkoutByName = function (name) {
  */
 UserSchema.methods.createAndSaveWorkout = function (attempts, name, journal) {
   const workout = new Workout({
-    parentUser: user._id,
-    activites: attempts,
+    parentUser: this._id,
+    activities: attempts,
     name: name,
     journal: journal
   });
