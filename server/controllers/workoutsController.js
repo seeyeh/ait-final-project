@@ -61,7 +61,8 @@ const createNewWorkout = asyncHandler(async (req, res) => {
   // convert activities of request body into attempt schema
   let attempts = [];
   for (let activity of activities) {
-    const { result, error } = createAttempt(parentUser, activity);
+    // create attempt in both workout and exercise
+    const { result, error } = await createAttempt(parentUser, activity);
     if (error) return res.status(400).json({ message: `Invalid activities array: '${error}'` });
     attempts.push(result);
   }
@@ -70,7 +71,6 @@ const createNewWorkout = asyncHandler(async (req, res) => {
     ...req.body,
     activities: attempts
   });
-  console.log(attempts);
   try {
     await workout.save();
     res.status(201).json({ message: `New workout ${workout.name} created` });
@@ -92,27 +92,47 @@ const updateWorkout = asyncHandler(async (req, res) => {
   const workout = await Workout.findOne({ parentUser, _id: id }).exec();
   if (!workout) return res.status(400).json({ message: `No workout found` });
 
+  // complete patches one by one
   let completedPatches = 0;
   for (let patch of patches) {
     const { path, op, value } = patch;
+    // do not allow patching of immutable fields
     if (path in WorkoutSchemaFields === false || path === '_id' || path === 'parentUser' || path === 'date')
       return res.status(400).json({ message: `Invalid patch path` });
 
     const { result, error } = await patchWorkout(workout, parentUser, op, path, value);
     if (error) return res.status(400).json({ message: `Error (${completedPatches} completed): ${error}` });
     workout[path] = result;
+
+    // save per workout to preserve consistency with exercises if error happens
     await workout.save();
     completedPatches++;
   }
 
-  workout.save();
   res.json({ message: `Successfully patched ${workout.name}` });
 });
 
 // @desc Delete an workout
 // @route DELETE /workouts
 // @access Private
-const deleteWorkout = asyncHandler(async (req, res) => {});
+const deleteWorkout = asyncHandler(async (req, res) => {
+  const { parentUser, id } = req.body;
+  // Confirm data (parentUser and name required)
+  if (!parentUser || !id) return res.status(400).json({ message: 'parentUser and workout id fields are required' });
+  // get workout to patch
+  const workout = await Workout.findOne({ parentUser, _id: id }).exec();
+  if (!workout) return res.status(400).json({ message: `No workout found` });
+
+  // remove workout attempts from respective exercises
+  for (let { _id } of workout.activities) {
+    const { error } = await removeAttempt(parentUser, _id.toString(), workout);
+    if (error) return res.status(400).json({ message: `Error deleting activities: ${error}` });
+  }
+
+  const { deletedCount } = await workout.deleteOne();
+  if (deletedCount !== 1) return res.status(400).json({ message: `Workout could not be deleted` });
+  res.json({ message: `Workout ${workout.name} deleted` });
+});
 
 async function patchWorkout(workout, parentUser, op, path, value) {
   const isIterablePath = Array.isArray(workout[path]) || workout[path] instanceof Map;
@@ -122,20 +142,22 @@ async function patchWorkout(workout, parentUser, op, path, value) {
       if (!isIterablePath) return { error: `Invalid patch path, must be iterable` };
 
       if (path === 'stats') {
+        // map data type requires key and value, add operation is same as replace
         if (!value.key || !value.value) return { error: `Invalid patch value for stats: key, value fields required` };
         workout[path].set(value.key, value.value);
       } else {
         // path === 'activities'
         const { result, error } = await createAttempt(parentUser, value, workout);
-        console.log(error);
         if (error) return { error: `Invalid patch value: ${error}` };
         workout[path].push(result);
       }
       break;
 
     case 'remove':
+      // validation: remove operation must add to an iterable
       if (!isIterablePath) return { error: `Invalid patch path, must be iterable` };
       if (path === 'stats') {
+        // map must contain specified key
         if (!value.key || !workout[path].has(value.key))
           return { error: `Invalid patch value for stats: key in stats required` };
         workout[path].delete(value);
@@ -147,9 +169,9 @@ async function patchWorkout(workout, parentUser, op, path, value) {
       }
       break;
 
-    // replace operation for non-array fields (name, desc, video) except parentUser
+    // replace operation for name, journal
     case 'replace':
-      // validation: replace operation cannot be used on arrays and value must be string
+      // validation: replace operation cannot be used on iterable and value must be string
       if (isIterablePath) return { error: `Invalid patch path, cannot replace an iterable` };
       if (typeof value !== 'string') return { error: `Invalid patch value, must be a string` };
       workout[path] = value;
@@ -161,17 +183,19 @@ async function patchWorkout(workout, parentUser, op, path, value) {
 }
 
 async function createAttempt(parentUser, activity, workout) {
+  // validate datatype of activity
   if (typeof activity !== 'object' || !activity.exercise || !activity.sets || !Array.isArray(activity.sets))
     return { error: `Invalid activity` };
   for (let field in activity) {
     if (field in AttemptSchemaFields == false) return { error: `Invalid activity` };
   }
+
   // get exercise id of activity by exercise name
   const exercise = await Exercise.findOne({ parentUser, name: activity.exercise }).exec();
   if (!exercise) return { error: `Invalid activity, exercise not found` };
 
   const newAttempt = new Attempt({
-    date: workout.date ?? new Date(),
+    date: workout?.date ?? new Date(),
     exercise: exercise._id,
     sets: activity.sets,
     journal: activity.journal
@@ -183,15 +207,17 @@ async function createAttempt(parentUser, activity, workout) {
 }
 
 async function removeAttempt(parentUser, activityId, workout) {
+  // get array index of attempt to remove from workout
   let activityIndex = workout.activities.map((activity) => activity._id.toString()).indexOf(activityId);
   if (activityIndex === -1) return { error: `Activity not found` };
 
   let activity = workout.activities[activityIndex];
-  console.log(activity.exercise);
+  // delete attempt from exercise
   const exercise = await Exercise.findOne({ parentUser, _id: activity.exercise }).exec();
-  if (!exercise) return { error: `Error: exercise not found` };
-  exercise.history = exercise.history.filter((activity) => activity._id.toString() !== activityId);
-  exercise.save();
+  if (exercise) {
+    exercise.history = exercise.history.filter((activity) => activity._id.toString() !== activityId);
+    exercise.save();
+  }
 
   return { result: activityIndex };
 }
