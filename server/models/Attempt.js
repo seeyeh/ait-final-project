@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const SetSchema = new mongoose.Schema({
+  _id: false,
   reps: {
     type: Number,
     required: true,

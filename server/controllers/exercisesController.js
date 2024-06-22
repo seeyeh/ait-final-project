@@ -1,5 +1,3 @@
-import User from '../models/User.js';
-import Attempt from '../models/Attempt.js';
 import asyncHandler from 'express-async-handler';
 import Exercise from '../models/Exercise.js';
 import mongoose from 'mongoose';
@@ -100,11 +98,11 @@ const updateExercise = asyncHandler(async (req, res) => {
   if (!exercise) return res.status(400).json({ message: `No exercise found` });
 
   for (let patch of patches) {
-    const { path, op } = patch;
-    if (path in ExerciseSchemaFields === false || path === 'history')
+    const { path, op, value } = patch;
+    if (path in ExerciseSchemaFields === false || path === 'history' || path === '_id' || path === 'parentUser')
       return res.status(400).json({ message: `Invalid patch path` });
 
-    const { result, error } = await patchExercise(exercise, parentUser, op, path, patch.value);
+    const { result, error } = await patchExercise(exercise, parentUser, op, path, value);
     if (error) return res.status(400).json({ message: error });
     exercise[path] = result;
   }

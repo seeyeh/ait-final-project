@@ -24,13 +24,15 @@ const WorkoutSchema = new mongoose.Schema({
   activities: {
     type: [Attempt.schema],
     required: true,
-    immutable: true,
     validate: {
       validator: (v) => v.length > 0,
       message: 'Must contain at least one activity'
     }
   }, // an array of references to Exercise documents
-  stats: Map,
+  stats: {
+    type: Map,
+    default: new Map()
+  },
   journal: String
 });
 
