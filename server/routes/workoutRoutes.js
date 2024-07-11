@@ -1,5 +1,4 @@
 import Express from 'express';
-import { fileURLToPath } from 'url';
 const workoutsRouter = Express.Router();
 import workoutsController from '../controllers/workoutsController.js';
 

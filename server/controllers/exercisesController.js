@@ -65,9 +65,7 @@ const createNewExercise = asyncHandler(async (req, res) => {
         return Exercise.findOne({ parentUser, name: subName }).select('_id').exec();
       })
     );
-    console.log(exerciseParams.substitutions);
     exerciseParams.substitutions = exerciseParams.substitutions.filter((e) => e);
-    // exerciseParams.substitutions = exerciseParams.substitutions.map(e => e._id);
   }
 
   // // Create and store new exercise
@@ -107,7 +105,7 @@ const updateExercise = asyncHandler(async (req, res) => {
     exercise[path] = result;
   }
 
-  exercise.save();
+  await exercise.save();
   res.json({ message: `Successfully patched ${name}` });
 });
 
@@ -125,6 +123,8 @@ const deleteExercise = asyncHandler(async (req, res) => {
   if (!exercise) {
     return res.status(400).json({ message: `No exercise found` });
   }
+
+  // TODO: Remove exercise from existing templates with exercise
 
   const { deletedCount } = await exercise.deleteOne();
   if (deletedCount !== 1) return res.status(400).json({ message: `Exercise could not be deleted` });
