@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Exercise from '../models/Exercise.js';
 import mongoose from 'mongoose';
+import Template from '../models/Template.js';
 
 const { ObjectId } = mongoose.Types;
 
@@ -60,6 +61,9 @@ const createNewExercise = asyncHandler(async (req, res) => {
   }
 
   if (exerciseParams.substitutions) {
+    if (!exerciseParams.substitutions.every((sub) => typeof sub === 'string'))
+      return res.status(400).json({ message: 'Invalid substitutions array, must contain strings' });
+
     exerciseParams.substitutions = await Promise.all(
       exerciseParams.substitutions.map(async (subName) => {
         return Exercise.findOne({ parentUser, name: subName }).select('_id').exec();
@@ -124,7 +128,8 @@ const deleteExercise = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: `No exercise found` });
   }
 
-  // TODO: Remove exercise from existing templates with exercise
+  // updates splits by removing all instances of template id from the templates field
+  Template.updateMany({ exercises: exercise._id }, { $pull: { exercises: exercise._id } }, { multi: true }).exec();
 
   const { deletedCount } = await exercise.deleteOne();
   if (deletedCount !== 1) return res.status(400).json({ message: `Exercise could not be deleted` });

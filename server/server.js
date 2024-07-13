@@ -6,10 +6,14 @@ import Express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 import router from './routes/root.js';
 import usersRouter from './routes/userRoutes.js';
 import workoutsRouter from './routes/workoutRoutes.js';
 import exercisesRouter from './routes/exerciseRoutes.js';
+import templatesRouter from './routes/templateRoutes.js';
+import splitsRouter from './routes/splitRoutes.js';
+
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -41,6 +45,8 @@ app.use('/', router);
 app.use('/users', usersRouter);
 app.use('/workouts', workoutsRouter);
 app.use('/exercises', exercisesRouter);
+app.use('/templates', templatesRouter);
+app.use('/splits', splitsRouter);
 
 // A 404 catch-all for anything that doesn't have a defined route
 app.all('*', (req, res) => {

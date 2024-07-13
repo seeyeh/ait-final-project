@@ -40,10 +40,10 @@ const getSplit = asyncHandler(async (req, res) => {
 // @route POST /splits
 // @access Private
 const createNewSplit = asyncHandler(async (req, res) => {
-  const { parentUser, templates } = req.body;
+  const { parentUser } = req.body;
   // Confirm data (parentUser and name required)
-  if (!parentUser || !Array.isArray(templates) || templates.length === 0) {
-    return res.status(400).json({ message: 'parentUser and templates array are required' });
+  if (!parentUser) {
+    return res.status(400).json({ message: 'parentUser is required' });
   }
   // check if all fields of body are valid
   for (let field in req.body) {
@@ -51,11 +51,18 @@ const createNewSplit = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: `Invalid input field '${field}'` });
   }
 
-  // convert templates of request body into attempt schema
-  let templateIds = await Promise.all(
-    templates.map(async (template) => Template.findOne({ parentUser, _id: template }).select('_id').exec())
-  );
-  templateIds = templateIds.filter((e) => e);
+  let templateIds = [];
+  if (req.body.templates) {
+    const templates = req.body.templates;
+    if (!Array.isArray(templates) || !templates.every((template) => typeof template === 'string'))
+      return res.status(400).json({ message: 'Invalid template array, must be an array of strings' });
+
+    // convert templates of request body into attempt schema
+    templateIds = await Promise.all(
+      templates.map(async (template) => Template.findOne({ parentUser, _id: template }).select('_id').exec())
+    );
+    templateIds = templateIds.filter((e) => e);
+  }
   // create and store new split document
   const split = new Split({
     ...req.body,

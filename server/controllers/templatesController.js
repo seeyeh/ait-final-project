@@ -41,10 +41,10 @@ const getTemplate = asyncHandler(async (req, res) => {
 // @route POST /templates
 // @access Private
 const createNewTemplate = asyncHandler(async (req, res) => {
-  const { parentUser, exercises } = req.body;
+  const { parentUser } = req.body;
   // Confirm data (parentUser and name required)
-  if (!parentUser || !Array.isArray(exercises) || exercises.length === 0) {
-    return res.status(400).json({ message: 'parentUser and exercises array are required' });
+  if (!parentUser) {
+    return res.status(400).json({ message: 'parentUser is required' });
   }
   // check if all fields of body are valid
   for (let field in req.body) {
@@ -52,11 +52,19 @@ const createNewTemplate = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: `Invalid input field '${field}'` });
   }
 
-  // convert exercises of request body into attempt schema
-  let exerciseIds = await Promise.all(
-    exercises.map(async (exercise) => Exercise.findOne({ parentUser, name: exercise }).select('_id').exec())
-  );
-  exerciseIds = exerciseIds.filter((e) => e);
+  let exerciseIds = [];
+  if (req.body.exercises) {
+    const exercises = req.body.exercises;
+    if (!Array.isArray(exercises) || !exercises.every((exercise) => typeof exercise === 'string'))
+      return res.status(400).json({ message: 'Invalid exercise array, must be an array strings' });
+
+    // convert exercises of request body into attempt schema
+    exerciseIds = await Promise.all(
+      exercises.map(async (exercise) => Exercise.findOne({ parentUser, name: exercise }).select('_id').exec())
+    );
+    exerciseIds = exerciseIds.filter((e) => e);
+  }
+
   // create and store new template document
   const template = new Template({
     ...req.body,
@@ -110,7 +118,8 @@ const deleteTemplate = asyncHandler(async (req, res) => {
   const template = await Template.findOne({ parentUser, _id: id }).exec();
   if (!template) return res.status(400).json({ message: `No template found` });
 
-  Split.update({ templates: id }, { $pull: { templates: id } }, { multi: true }).exec();
+  // updates splits by removing all instances of template id from the templates field
+  Split.updateMany({ templates: id }, { $pull: { templates: id } }, { multi: true }).exec();
 
   const { deletedCount } = await Template.deleteOne();
   if (deletedCount !== 1) return res.status(400).json({ message: `Template could not be deleted` });
