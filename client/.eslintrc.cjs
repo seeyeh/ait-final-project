@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    'prettier',
+    'prettier'
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -15,10 +15,13 @@ module.exports = {
   plugins: ['react-refresh', 'prettier'],
   rules: {
     'react/jsx-no-target-blank': 'off',
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    'prettier/prettier': ['error']
-  },
-}
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'prettier/prettier': ['error'],
+    'import/no-anonymous-default-export': [
+      'error',
+      {
+        allowObject: true
+      }
+    ]
+  }
+};
