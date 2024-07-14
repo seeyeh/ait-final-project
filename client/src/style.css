@@ -3,11 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: border-box;
+@layer base {
+  :root {
+    --grayscale-00: #ffffff;
+    --grayscale-40: #c7c8cd;
+    --grayscale-60: #7a7a7a;
+    --grayscale-80: #1f1f1f;
+    --grayscale-100: #000000;
+  }
 }
 
-body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
