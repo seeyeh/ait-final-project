@@ -31,13 +31,9 @@ const __dirname = path.dirname(__filename); // gets parent directory of server.j
 app.use(Express.urlencoded({ extended: false }));
 
 app.use(logger);
-
 app.use(Express.json()); // allows app to receive and parse JSON data
-
 app.use(cookieParser());
-
 app.use(cors(corsOptions)); // essentially makes our api available to the public; other origins can request resources from our api
-
 app.use('/', Express.static(path.join(__dirname, '/public'))); // telling express where to find static files like CSS or an image
 // also does the same thing: app.use(Express.static('public');
 
