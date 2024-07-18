@@ -9,9 +9,9 @@ export default {
         // 60: 'var(--grayscale-60)',
         // 80: 'var(--grayscale-80)',
         // 100: 'var(--grayscale-100)'
-        5: 'var(--grayscale-5',
-        25: 'var(--graysccale-25',
-        90: 'var(--grayscale-90'
+        5: 'var(--grayscale-5)',
+        25: 'var(--graysccale-25)',
+        90: 'var(--grayscale-90)'
       },
       green: {
         20: 'var(--green-20)',
