@@ -4,7 +4,7 @@ import usersController from '../controllers/usersController.js';
 
 usersRouter
   .route('/')
-  .get(usersController.getAllUsers)
+  .get(usersController.getUser)
   .post(usersController.createNewUser)
   .patch(usersController.updateUser)
   .delete(usersController.deleteUser);

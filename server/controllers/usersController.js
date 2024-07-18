@@ -16,8 +16,12 @@ const UserSchemaFields = Object.freeze({
 // @desc Get all users
 // @route GET /users
 // @access Private
-const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select('-password').lean(); // retrieves a User doc
+const getUser = asyncHandler(async (req, res) => {
+  for (let field in req.query) {
+    if (field in UserSchemaFields === false) return res.status(400).json({ message: `Invalid query field '${field}'` });
+  }
+
+  const users = await User.find(req.query).select('-password').lean(); // retrieves a User doc
   if (!users?.length) {
     return res.status(400).json({ message: 'No users found' });
   }
@@ -134,7 +138,7 @@ const patchUser = async function (user, op, path, value) {
 };
 
 export default {
-  getAllUsers,
+  getUser,
   createNewUser,
   updateUser,
   deleteUser
