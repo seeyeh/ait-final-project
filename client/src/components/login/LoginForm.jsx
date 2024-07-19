@@ -1,5 +1,5 @@
 function LoginForm() {
-  return <div>LoginForm</div>;
+  return <div>Placeholder Login Form</div>;
 }
 
 export default LoginForm;
