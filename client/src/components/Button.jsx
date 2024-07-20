@@ -13,7 +13,8 @@ const buttonVariants = cva(
         pink: 'bg-pink-40 text-grayscale-90  hover:bg-grayscale-90 hover:text-pink-40 hover:outline hover:outline-pink-40'
       },
       size: {
-        default: 'px-3 py-0.5 text-base'
+        default: 'px-3 h-6 text-base',
+        lg: 'px-3 h-7 text-xl'
       }
     },
     defaultVariants: {
@@ -26,7 +27,7 @@ const buttonVariants = cva(
 const Button = forwardRef(({ variant, size, className, ...props }, ref) => {
   return (
     <button
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn('', buttonVariants({ variant, size, className }))}
       ref={ref}
       {...props}
     />
