@@ -3,10 +3,11 @@ import Input from '../Input';
 
 function LoginForm() {
   return (
-    <div className="m-10">
+    <div className="m-10 bg-grayscale-90 max-w-md p-4 text-grayscale-5">
       Placeholder Login Form
       <Button />
       <Input id="username" header="Username" type="text" name="Test" />
+      <Input id="password" header="Password" type="text" name="Test" />
     </div>
   );
 }

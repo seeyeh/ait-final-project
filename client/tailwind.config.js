@@ -7,7 +7,7 @@ export default {
         // 0: 'var(--grayscale-00)',
         // 40: 'var(--grayscale-40)',
         // 60: 'var(--grayscale-60)',
-        // 80: 'var(--grayscale-80)',
+        80: 'var(--grayscale-80)',
         // 100: 'var(--grayscale-100)'
         5: 'var(--grayscale-5)',
         25: 'var(--grayscale-25)',

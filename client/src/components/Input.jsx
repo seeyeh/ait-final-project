@@ -4,17 +4,17 @@ import { cn } from '../lib/utils';
 const Input = forwardRef(({ id, className, header, ...props }, ref) => {
   // props needed: header, type, placeholder, handleChange, name, value
   return (
-    <div className="group">
+    <div className="group mb-5 mr-auto">
       <label
         htmlFor={id}
-        className="input--header bg-grayscale-90 p-1 py-1.5 px-2 text-grayscale-5 focus:bg-grayscale-90 focus:text-grayscale-5"
+        className="input--header bg-grayscale-80 p-1 pt-1 pb-[0.35rem] px-2 text-grayscale-5 focus:bg-grayscale-90 focus:text-grayscale-5"
       >
         {header}
       </label>
       <input
         id={id}
         className={cn(
-          'border-grayscale-25 px-2 pt-1 pb-2 mt-[3px] rounded-b-2xl rounded-tr-2xl border w-[15rem] focus:outline-none focus:border-grayscale-90 flex focus:border-[0.09rem]',
+          'bg-grayscale-90 text-grayscale-5 border-grayscale-80 px-2 pt-1 pb-2 mt-[3px] rounded-b-2xl rounded-tr-2xl border w-[15rem] focus:outline-none flex focus:border-grayscale-25 focus:z-10',
           className
         )}
         {...props}
