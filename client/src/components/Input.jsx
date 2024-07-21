@@ -14,7 +14,7 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
       <input
         id={id}
         className={cn(
-          'bg-grayscale-90 text-grayscale-5 border-grayscale-80 px-2 pt-1 pb-2 mt-[3px] rounded-b-2xl rounded-tr-2xl border w-[15rem] focus:outline-none flex focus:border-grayscale-25 focus:z-10',
+          'bg-grayscale-90 text-grayscale-5 border-grayscale-80 px-2 pt-1 pb-2 mt-[3px] rounded-b-2xl rounded-tr-2xl border w-[15rem] focus:outline-none flex focus:border-grayscale-25 focus:z-10 focus:transition-colors',
           className
         )}
         {...props}
