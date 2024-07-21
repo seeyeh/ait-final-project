@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         default:
           'bg-grayscale-80 text-grayscale-25 hover:bg-grayscale-5 hover:text-grayscale-80',
-        pink: 'bg-pink-40 text-grayscale-90  hover:bg-grayscale-90 hover:text-pink-40 hover:outline hover:outline-pink-40'
+        pink: 'bg-pink-40 text-grayscale-90 hover:bg-grayscale-5 hover:text-grayscale-80'
       },
       size: {
         default: 'px-3 h-6 text-base',
