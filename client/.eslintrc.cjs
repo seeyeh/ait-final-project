@@ -15,8 +15,10 @@ module.exports = {
   plugins: ['react-refresh', 'prettier'],
   rules: {
     'react/jsx-no-target-blank': 'off',
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    'prettier/prettier': ['error'],
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true }
+    ],
     'import/no-anonymous-default-export': [
       'error',
       {

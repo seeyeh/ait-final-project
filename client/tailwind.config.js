@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import colors from 'tailwindcss/colors';
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -6,8 +8,8 @@ export default {
       grayscale: {
         // 0: 'var(--grayscale-00)',
         // 40: 'var(--grayscale-40)',
-        // 60: 'var(--grayscale-60)',
-        // 80: 'var(--grayscale-80)',
+        70: 'var(--grayscale-70)',
+        80: 'var(--grayscale-80)',
         // 100: 'var(--grayscale-100)'
         5: 'var(--grayscale-5)',
         25: 'var(--grayscale-25)',
@@ -34,9 +36,23 @@ export default {
       orange: {
         light: 'var(--orange-light)',
         dark: 'var(--orange-dark)'
-      }
+      },
+      black: colors.black,
+      white: colors.white
     },
-    extend: {}
+    extend: {
+      boxShadow: {
+        'glow-sm': '0 0 2px -0 var(--tw-shadow-color)',
+        'glow-md': '0 0 6px -1px var(--tw-shadow-color)',
+        'glow-lg': '0 0 15px -3px var(--tw-shadow-color)',
+        'glow-xl': '0 0 25px -5px var(--tw-shadow-color)',
+        'glow-2xl': '0 0 50px -12px var(--tw-shadow-color)'
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '3rem'
+      }
+    }
   },
   plugins: []
 };

@@ -1,10 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
-
-import Layout from './components/Layout';
-import Public from './components/Public';
-import Login from './features/auth/Login';
-import DashLayout from './components/DashLayout';
-import NotFound from './pages/NotFound';
+import Layout from './routes/Layout';
+import Public from './routes/Public';
+import Login from './routes/Login';
+import DashLayout from './routes/DashLayout';
+import NotFound from './routes/NotFound';
 
 function App() {
   return (

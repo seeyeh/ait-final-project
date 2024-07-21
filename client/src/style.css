@@ -8,10 +8,14 @@
     --grayscale-00: #ffffff;
     --grayscale-40: #c7c8cd;
     --grayscale-60: #7a7a7a;
-    --grayscale-80: #1f1f1f;
+    --grayscale-80: #292929;
     --grayscale-100: #000000;
+    --grayscale-90: #111111;
+    --grayscale-70: #4d4d4d;
+    --grayscale-5: #e8e8e8;
+    --grayscale-25: #bcb8b8;
     --green-20: #b6ffa7;
-    --green-50: #64e949; 
+    --green-50: #64e949;
     --green-80: #1e9805;
     --pink-10: #ffdbf1;
     --pink-40: #ff71c6;
@@ -22,11 +26,6 @@
     --blue-dark: #0f87cb;
     --orange-light: #ffcd94;
     --orange-dark: #ac6f30;
-    --grayscale-90: #111111;
-    --grayscale-5: #e8e8e8;
-    --grayscale-25: #bcb8b8;
-
-
   }
 }
 
