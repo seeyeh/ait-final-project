@@ -13,6 +13,7 @@ import workoutsRouter from './routes/workoutRoutes.js';
 import exercisesRouter from './routes/exerciseRoutes.js';
 import templatesRouter from './routes/templateRoutes.js';
 import splitsRouter from './routes/splitRoutes.js';
+import authRouter from './routes/authRoutes.js';
 
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -38,6 +39,7 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 // also does the same thing: app.use(Express.static('public');
 
 app.use('/', router);
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/workouts', workoutsRouter);
 app.use('/exercises', exercisesRouter);
