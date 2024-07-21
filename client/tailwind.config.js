@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import colors from 'tailwindcss/colors';
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -34,9 +36,23 @@ export default {
       orange: {
         light: 'var(--orange-light)',
         dark: 'var(--orange-dark)'
-      }
+      },
+      black: colors.black,
+      white: colors.white
     },
-    extend: {}
+    extend: {
+      boxShadow: {
+        'glow-sm': '0 0 2px -0 var(--tw-shadow-color)',
+        'glow-md': '0 0 6px -1px var(--tw-shadow-color)',
+        'glow-lg': '0 0 15px -3px var(--tw-shadow-color)',
+        'glow-xl': '0 0 25px -5px var(--tw-shadow-color)',
+        'glow-2xl': '0 0 50px -12px var(--tw-shadow-color)'
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '3rem'
+      }
+    }
   },
   plugins: []
 };

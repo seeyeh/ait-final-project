@@ -3,8 +3,7 @@ import Input from '../Input';
 
 function LoginForm() {
   return (
-    <div className="m-10 bg-grayscale-90 max-w-md p-4 text-grayscale-5">
-      Placeholder Login Form
+    <div className="bg-grayscale-90 w-[32rem] h-[36rem] rounded-4xl mb-8 shadow-glow-2xl shadow-grayscale-90 p-4 text-grayscale-5">
       <div>
         <Button variant="pink" size="lg">
           Next
