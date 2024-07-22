@@ -1,6 +1,9 @@
 import Express from 'express';
 const splitsRouter = Express.Router();
 import splitsController from '../controllers/splitsController.js';
+import verifyJWT from '../middleware/verifyJWT.js';
+
+splitsRouter.use(verifyJWT); // applies middleware to all routes
 
 splitsRouter
   .route('/')
