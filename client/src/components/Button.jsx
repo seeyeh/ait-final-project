@@ -8,36 +8,44 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'bg-grayscale-80 text-grayscale-25 hover:bg-grayscale-5 hover:text-grayscale-80',
-        pink: 'bg-pink-40 text-grayscale-90 hover:bg-grayscale-5 hover:text-grayscale-80'
+        dark: 'bg-grayscale-80 text-grayscale-25',
+        light: 'bg-white text-grayscale-60',
+        pink: 'bg-pink-40 text-white'
       },
       size: {
-        default: 'px-3 h-6 text-base',
-        lg: 'px-3 h-7 text-xl'
+        default: 'px-3 h-6 text-base leading-none',
+        lg: 'px-3 h-8 text-2xl leading-none'
+      },
+      hover: {
+        gray: 'hover:bg-grayscale-80 hover:text-white',
+        pink: 'hover:bg-pink-40 hover:text-white'
       }
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default'
+      variant: 'light',
+      size: 'default',
+      hover: 'gray'
     }
   }
 );
 
-const Button = forwardRef(({ variant, size, className, ...props }, ref) => {
-  return (
-    <button
-      className={cn('', buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+const Button = forwardRef(
+  ({ variant, size, hover, className, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, hover, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
 
 Button.propTypes = {
   className: PropTypes.string,
   variant: PropTypes.string,
-  size: PropTypes.string
+  size: PropTypes.string,
+  hover: PropTypes.string
 };
 Button.displayName = 'Button';
 
