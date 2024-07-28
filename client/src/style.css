@@ -27,9 +27,47 @@
     --orange-light: #ffcd94;
     --orange-dark: #ac6f30;
   }
-}
+  @font-face {
+    font-family: 'ApfelGrotezk';
+    src:
+      local('ApfelGrotezk-Regular'),
+      url('./assets/fonts/ApfelGrotezk-Regular.woff2') format('woff2'),
+      url('./assets/fonts/ApfelGrotezk-Regular.otf') format('opentype');
+    font-display: swap;
+    font-weight: 100 400;
+  }
+  @font-face {
+    font-family: 'ApfelGrotezk';
+    src:
+      local('ApfelGrotezk-Mittel'),
+      url('./assets/fonts/ApfelGrotezk-Mittel.woff2') format('woff2'),
+      url('./assets/fonts/ApfelGrotezk-Mittel.otf') format('opentype');
+    font-display: swap;
+    font-weight: 500 600;
+  }
+  @font-face {
+    font-family: 'ApfelGrotezk';
+    src:
+      local('ApfelGrotezk-Fett'),
+      url('./assets/fonts/ApfelGrotezk-Fett.woff2') format('woff2'),
+      url('./assets/fonts/ApfelGrotezk-Fett.otf') format('opentype');
+    font-display: swap;
+    font-weight: 700 800;
+  }
+  @font-face {
+    font-family: 'ApfelGrotezk';
+    src:
+      local('ApfelGrotezk-Satt'),
+      url('./assets/fonts/ApfelGrotezk-Satt.woff2') format('woff2'),
+      url('./assets/fonts/ApfelGrotezk-Satt.otf') format('opentype');
+    font-display: swap;
+    font-weight: 900;
+  }
 
-@layer base {
+  html {
+    font-family: 'ApfelGrotezk';
+    letter-spacing: -0.04em;
+  }
 }
 
 @layer utilities {

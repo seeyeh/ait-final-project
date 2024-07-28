@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const DashFooter = () => {
+const DashSidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onGoHomeClicked = () => navigate('/dash');
@@ -8,17 +8,17 @@ const DashFooter = () => {
   let goHomeButton = null;
   if (pathname !== '/dash') {
     goHomeButton = (
-      <button className="dash-footer__button" title="Home" onClick={onGoHomeClicked}>
+      <button title="Home" onClick={onGoHomeClicked}>
         Home
       </button>
     );
   }
   return (
-    <footer className="dash-footer">
+    <aside className="w-80 flex flex-col py-12 px-9">
       {goHomeButton}
-      <p>Dash Footer</p>
-    </footer>
+      <p>Dash Sidebar</p>
+    </aside>
   );
 };
 
-export default DashFooter;
+export default DashSidebar;

@@ -8,10 +8,7 @@ function LoginForm() {
       <div className="w-full flex-1 flex flex-col gap-4">
         <Input id="username" header="Username" className="w-full" />
         <Input id="password" header="Password" className="w-full" />
-        <a
-          href="/login"
-          className="text-lg leading-none text-grayscale-60 self-end"
-        >
+        <a href="/login" className="text-lg text-grayscale-60 self-end">
           Forgot password?
         </a>
       </div>

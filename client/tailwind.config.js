@@ -42,6 +42,10 @@ export default {
       white: colors.white
     },
     extend: {
+      fontFamily: {
+        main: ['ApfelGrotezk', 'ui-sans-serif'],
+        alt: ['Roboto']
+      },
       boxShadow: {
         'glow-sm': '0 0 2px -0 var(--tw-shadow-color)',
         'glow-md': '0 0 6px -1px var(--tw-shadow-color)',

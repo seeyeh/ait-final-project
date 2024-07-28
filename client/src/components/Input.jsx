@@ -8,7 +8,7 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
       <input
         id={id}
         className={cn(
-          'peer bg-white text-grayscale-80 text-2xl leading-none transition-colors',
+          'peer bg-white text-grayscale-80 text-2xl transition-colors',
           'w-full h-fit -mt-1 border-[3px] border-white p-2 rounded-r-4xl rounded-bl-3xl',
           'focus:outline-none focus:border-pink-40'
         )}

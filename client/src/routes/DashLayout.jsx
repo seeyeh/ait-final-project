@@ -1,17 +1,13 @@
 import { Outlet } from 'react-router-dom';
-import DashHeader from '../components/dashboard/DashHeader';
-import DashFooter from '../components/dashboard/DashFooter';
+import DashSidebar from '../components/dashboard/DashSidebar';
 
-const DashLayout = () => {
+function DashLayout() {
   return (
-    <>
-      <DashHeader />
-      <div className="dash-contain">
-        <Outlet />
-      </div>
-      <DashFooter />
-    </>
+    <div className="flex max-w-screen max-h-screen min-h-screen h-screen w-screen absolute inset-0">
+      <DashSidebar />
+      <Outlet />
+    </div>
   );
-};
+}
 
 export default DashLayout;
