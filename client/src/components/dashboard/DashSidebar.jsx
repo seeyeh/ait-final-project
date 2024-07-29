@@ -18,7 +18,7 @@ const DashSidebar = () => {
   return (
     <aside
       className={cn(
-        'w-80 h-screen max-h-screen min-h-screen',
+        'w-80 min-w-80 h-screen max-h-screen min-h-screen',
         'overflow-x-clip overflow-y-hidden no-scrollbar',
         'bg-grayscale-5 flex flex-col py-12 px-9'
       )}

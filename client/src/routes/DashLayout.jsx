@@ -5,7 +5,9 @@ function DashLayout() {
   return (
     <div className="flex max-w-screen max-h-screen min-h-screen h-screen w-screen absolute inset-0">
       <DashSidebar />
-      <Outlet />
+      <main className="px-12 pt-12">
+        <Outlet />
+      </main>
     </div>
   );
 }
