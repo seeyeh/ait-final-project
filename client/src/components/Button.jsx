@@ -13,11 +13,12 @@ const buttonVariants = cva(
         pink: 'bg-pink-40 text-white'
       },
       size: {
-        default: 'px-3 h-6 text-base',
-        lg: 'px-3 h-8 text-2xl'
+        default: 'px-3 text-base',
+        lg: 'px-3 text-2xl'
       },
       hover: {
         gray: 'hover:bg-grayscale-80 hover:text-white',
+        lightpink: 'hover:bg-white hover:text-pink-40',
         pink: 'hover:bg-pink-40 hover:text-white'
       }
     },
