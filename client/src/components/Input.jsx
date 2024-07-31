@@ -7,13 +7,17 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
     <div className={cn('flex flex-col-reverse w-56', className)}>
       <input
         id={id}
-        className="peer -mt-1 bg-grayscale-90 text-grayscale-5 border-grayscale-80 p-2 rounded-b-2xl rounded-tr-2xl border-2 w-full focus:outline-none focus:border-grayscale-25 transition-colors"
+        className={cn(
+          'peer bg-white text-grayscale-80 text-2xl transition-colors',
+          'w-full h-fit -mt-1 border-[3px] border-white p-2 rounded-r-4xl rounded-bl-3xl',
+          'focus:outline-none focus:border-pink-40'
+        )}
         {...props}
         ref={ref}
       />
       <label
         htmlFor={id}
-        className="w-fit bg-grayscale-80 p-2 pt-1 text-grayscale-5 focus:text-grayscale-5 peer-focus:bg-grayscale-25 peer-focus:text-grayscale-80 transition-colors"
+        className="w-fit bg-grayscale-25 p-2 pt-1 text-grayscale-80 text-2xl peer-focus:bg-pink-40 peer-focus:text-white transition-colors"
       >
         {header}
       </label>

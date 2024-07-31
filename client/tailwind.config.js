@@ -8,6 +8,7 @@ export default {
       grayscale: {
         // 0: 'var(--grayscale-00)',
         // 40: 'var(--grayscale-40)',
+        60: 'var(--grayscale-60)',
         70: 'var(--grayscale-70)',
         80: 'var(--grayscale-80)',
         // 100: 'var(--grayscale-100)'
@@ -41,6 +42,10 @@ export default {
       white: colors.white
     },
     extend: {
+      fontFamily: {
+        main: ['ApfelGrotezk', 'ui-sans-serif'],
+        alt: ['Roboto']
+      },
       boxShadow: {
         'glow-sm': '0 0 2px -0 var(--tw-shadow-color)',
         'glow-md': '0 0 6px -1px var(--tw-shadow-color)',
