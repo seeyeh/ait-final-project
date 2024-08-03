@@ -7,8 +7,8 @@ const labelVariants = cva('w-fit text-3xl px-1 leading-none', {
     color: {
       light: 'bg-grayscale-5 text-grayscale-60',
       blue: 'bg-blue-light text-blue-dark',
-      pink: 'bg-pink-10 text-pink-50',
-      green: 'bg-green-20 text-green-80',
+      pink: 'bg-pink-light text-pink-dark',
+      green: 'bg-green-light text-green-dark',
       yellow: 'bg-yellow-light text-yellow-dark',
       orange: 'bg-orange-light text-orange-dark'
     }

@@ -25,7 +25,7 @@ const DashSidebar = () => {
     >
       {goHomeButton}
       <span className="flex-grow" />
-      <div className="shadow-glow-lg shadow-pink-40 rounded-3xl w-full h-fit">
+      <div className="shadow-glow-lg shadow-pink-medium rounded-3xl w-full h-fit">
         <Button
           variant="pink"
           hover="lightpink"

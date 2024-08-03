@@ -17,14 +17,14 @@ export default {
         90: 'var(--grayscale-90)'
       },
       green: {
-        20: 'var(--green-20)',
-        50: 'var(--green-50)',
-        80: 'var(--green-80)'
+        light: 'var(--green-light)',
+        medium: 'var(--green-med)',
+        dark: 'var(--green-dark)'
       },
       pink: {
-        10: 'var(--pink-10)',
-        40: 'var(--pink-40)',
-        50: 'var(--pink-50)'
+        light: 'var(--pink-light)',
+        medium: 'var(--pink-medium)',
+        dark: 'var(--pink-dark)'
       },
       yellow: {
         light: 'var(--yellow-light)',
