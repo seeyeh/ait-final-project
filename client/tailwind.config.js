@@ -56,6 +56,16 @@ export default {
       borderRadius: {
         '4xl': '2rem',
         '5xl': '3rem'
+      },
+      fontSize: {
+        h1: ['5.5rem', '5.5rem'],
+        h2: ['4.25rem', '4.25rem'],
+        h3: ['3.25rem', '3.25rem'],
+        h4: ['2.25rem', '2.25rem'],
+        h5: ['1.75rem', '1.75rem'],
+        h6: ['1.25rem', '1.25rem'],
+        p: ['1rem', '1rem'],
+        small: ['0.75rem', '0.75rem']
       }
     }
   },

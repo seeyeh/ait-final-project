@@ -4,7 +4,7 @@ import Input from '../Input';
 function LoginForm() {
   return (
     <div className="bg-grayscale-5 w-[32rem] h-[36rem] rounded-5xl shadow-glow-2xl shadow-black/50 p-8 flex flex-col gap-12">
-      <h1 className="text-8xl text-black">Login</h1>
+      <h1 className="text-h1 text-black">Login</h1>
       <div className="w-full flex-1 flex flex-col gap-4">
         <Input id="username" header="Username" className="w-full" />
         <Input id="password" header="Password" className="w-full" />
