@@ -17,6 +17,7 @@ import authRouter from './routes/authRoutes.js';
 
 import { logger } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
+import verifyJWT from './middleware/verifyJWT.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
@@ -40,6 +41,7 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 
 app.use('/', router);
 app.use('/auth', authRouter);
+app.use(verifyJWT); // everything below this will have to go through verifying the JWT first (i.e. everything below requires a valid token first
 app.use('/users', usersRouter);
 app.use('/workouts', workoutsRouter);
 app.use('/exercises', exercisesRouter);

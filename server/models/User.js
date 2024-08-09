@@ -17,7 +17,8 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     match: /^\S*$/ // no whitespace
   },
-  stats: Map
+  stats: Map,
+  refreshToken: String
 });
 
 /**

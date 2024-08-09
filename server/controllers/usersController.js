@@ -47,7 +47,7 @@ const createNewUser = asyncHandler(async (req, res) => {
 
   // Hash password
   const hashedPwd = await bcrypt.hash(password, 10); // hash and add 10 salt rounds to the password
-  const userObject = { username, password: hashedPwd };
+  const userObject = { username, password: hashedPwd, refreshToken: '' };
 
   // Create and store new user
   const user = await User.create(userObject);
@@ -127,7 +127,8 @@ const patchUser = async function (user, op, path, value) {
         }
       } else if (path === 'password') {
         value = await bcrypt.hash(value, 10);
-      } else {
+      } else if (path !== 'refreshToken') {
+        // if the path is not username, nor password, NOR refreshToken (there's nothing really to check hence why the condition is written like this)
         return { error: 'Invalid path' };
       }
       break;

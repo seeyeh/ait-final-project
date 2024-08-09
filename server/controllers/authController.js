@@ -29,14 +29,22 @@ const login = asyncHandler(async (req, res) => {
     { expiresIn: '1m' }
   );
 
-  const refreshToken = jwt.sign({ username: foundUser.username }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '1d'
-  });
+  const refreshToken = jwt.sign(
+    {
+      username: foundUser.username
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  // TODO: save the refresh token with the User in the databse
+  foundUser['refreshToken'] = refreshToken;
+  foundUser.save();
 
   // Create secure cookie with refresh token
   res.cookie('jwt', refreshToken, {
     httpOnly: true, //accessible only by web server
-    secure: true, //https
+    secure: true, //https - even though localhost is http, it is fine to keep this in development, it will work
     sameSite: 'None', //cross-site cookie
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7-day cookie expiry: set to match refreshToken
   });
@@ -45,7 +53,7 @@ const login = asyncHandler(async (req, res) => {
   res.json({ accessToken });
 });
 
-// @desc Refresh
+// @desc Refresh; generates a new access token in the case it has expired for the user
 // @route GET /auth/refresh
 // @access Public - because access token has expired
 const refresh = asyncHandler(async (req, res) => {
@@ -56,16 +64,16 @@ const refresh = asyncHandler(async (req, res) => {
 
   const refreshToken = cookies.jwt;
 
+  // Search the database for a user with the refreshToken that was sent via HttpOnly cookie
+  const foundUser = await User.findOne({ refreshToken: refreshToken });
+  if (!foundUser) return res.status(403).json({ message: 'Forbidden' }); // No user found
+
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     asyncHandler(async (err, decoded) => {
-      if (err) return res.status(403).json({ message: 'Forbidden' });
-
-      // What's decoded??
-      const foundUser = await User.findOne({ username: decoded.username });
-
-      if (!foundUser) return res.status(401).json({ message: 'Unauthorized' });
+      // if error or the username that was recorded in the refreshToken does not match with the username of the user we searched for with the refreshToken (something could've been tampered with!)
+      if (err || foundUser.username !== decoded.username) return res.status(403).json({ message: 'Forbidden' });
 
       const accessToken = jwt.sign(
         {
@@ -82,13 +90,18 @@ const refresh = asyncHandler(async (req, res) => {
   );
 });
 
-// @desc Logout
+// @desc Logout - clears the cookie if it exists and deletes it from the associated User's doc in the db
 // @route POST /auth/logout
-// @access Public - just to clear cookie if exists
+// @access Public
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204); // No content; request successful there was no jwt cookie
-  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+  const refreshToken = cookies.jwt;
+  // Delete refreshToken in the database
+  const foundUser = await User.findOne({ refreshToken: refreshToken });
+  foundUser.refreshToken = '';
+  foundUser.save();
+  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }); // you need to include the same options that were part of the cookie when you made it (all except maxAge)
   res.json({ message: 'Cookie cleared' });
 });
 
