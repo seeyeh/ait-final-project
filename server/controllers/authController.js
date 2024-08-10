@@ -37,7 +37,7 @@ const login = asyncHandler(async (req, res) => {
     { expiresIn: '7d' }
   );
 
-  // TODO: save the refresh token with the User in the databse
+  // Save the refresh token with the User in the databse
   foundUser['refreshToken'] = refreshToken;
   foundUser.save();
 
