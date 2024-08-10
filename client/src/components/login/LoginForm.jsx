@@ -1,20 +1,24 @@
 import Button from '../Button';
 import Input from '../Input';
-import { useRef, useState, useEffect, useContext } from 'react';
-import AuthContext from '../../context/AuthProvider';
+import { useRef, useState, useEffect } from 'react';
+import useAuth from '../../hooks/useAuth.js';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import axios from '../../api/axios.js';
 const LOGIN_URL = '/auth';
 
 function LoginForm() {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dash";
+
   const userRef = useRef();
   const errRef = useRef();
 
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false); // just for dev purposes
     
   // Set focus on username input when component loads; 
   useEffect(() => {
@@ -40,7 +44,7 @@ function LoginForm() {
       setAuth({ user, pwd, accessToken })
       setUser('');
       setPwd('');
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No Server Response.');
@@ -56,7 +60,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="bg-grayscale-5 w-[32rem] h-[36rem] rounded-5xl shadow-glow-2xl shadow-black/50 p-8 flex flex-col gap-12">
+    <div className="bg-grayscale-5 w-[32rem] h-[36rem] rounded-5xl drop-shadow-2xl shadow-black/50 p-8 flex flex-col gap-12">
       <h1 className="text-h1 text-black">Login</h1>
       <div className="w-full flex-1 flex flex-col gap-4">
         <Input

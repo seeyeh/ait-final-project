@@ -2,10 +2,17 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import Button from '../Button';
 
+import useAuth from '../../hooks/useAuth.js';
+
+import useAxiosPrivate from '../../hooks/useAxiosPrivate.js';
+const LOGOUT_URL = '/auth/logout';
+
 const DashSidebar = () => {
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onGoHomeClicked = () => navigate('/dash');
+  const axiosPrivate = useAxiosPrivate();
 
   let goHomeButton = null;
   if (pathname !== '/dash') {
@@ -15,6 +22,18 @@ const DashSidebar = () => {
       </button>
     );
   }
+
+  const handleLogout = async () => {
+    try {
+      const response = await axiosPrivate.post(LOGOUT_URL);
+      console.log(JSON.stringify(response?.data));
+      setAuth({})
+      navigate('/login', { replace: true });
+    } catch (err) {
+      console.log('Logout failed.')
+    }
+  }
+
   return (
     <aside
       className={cn(
@@ -25,6 +44,12 @@ const DashSidebar = () => {
     >
       {goHomeButton}
       <span className="flex-grow" />
+      <Button
+        onClick={handleLogout}
+        className="m-20"
+      >
+        Logout
+      </Button>
       <div className="shadow-glow-lg shadow-pink-medium rounded-3xl w-full h-fit">
         <Button
           variant="pink"
