@@ -10,8 +10,8 @@ const useRefreshToken = () => {
       withCredentials: true // important b/c this setting allows us to send cookie with request, allowing us to send our refreshToken httpOnly cookie
     });
     setAuth((prev) => {
-      console.log(JSON.stringify(prev));
-      console.log(response.data.accessToken);
+      console.log('Previous AT: ' + JSON.stringify(prev));
+      console.log('Access Token Thing: ' + response.data.accessToken);
       return { ...prev, accessToken: response.data.accessToken };
     });
     return response.data.accessToken;

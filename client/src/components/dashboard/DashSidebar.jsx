@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import Button from '../Button';
 
-import useAuth from '../../hooks/useAuth.js';
+import useAuth from '../../hooks/useAuth.js'; // hook that gives us auth state and setAuth to save changes to auth after login/logout occurs
 
 import useAxiosPrivate from '../../hooks/useAxiosPrivate.js';
 const LOGOUT_URL = '/auth/logout';
