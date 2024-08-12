@@ -14,6 +14,7 @@ const login = asyncHandler(async (req, res) => {
   }
 
   const foundUser = await User.findOne({ username }).exec();
+  if (!foundUser) return res.status(401).json({ message: 'Unauthorized' });
 
   const match = await bcrypt.compare(password, foundUser.password);
 
@@ -95,7 +96,9 @@ const refresh = asyncHandler(async (req, res) => {
 // @access Public
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.sendStatus(204); // No content; request successful there was no jwt cookie
+  if (!cookies?.jwt) {
+    return res.json({ message: 'No cookie!' });
+   } // No content; request successful there was no jwt cookie
   const refreshToken = cookies.jwt;
   // Delete refreshToken in the database
   const foundUser = await User.findOne({ refreshToken: refreshToken });

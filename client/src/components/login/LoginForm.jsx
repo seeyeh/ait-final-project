@@ -8,7 +8,7 @@ import axios from '../../api/axios.js';
 const LOGIN_URL = '/auth';
 
 function LoginForm() {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/dash";
@@ -33,7 +33,7 @@ function LoginForm() {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(LOGIN_URL,
-        JSON.stringify({"username": user, "password": pwd}),
+        JSON.stringify({username: user, password: pwd}),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
@@ -58,6 +58,14 @@ function LoginForm() {
       errRef.current.focus()
     }
   }
+
+  const togglePersist = () => {
+    setPersist(prev => !prev);
+  }
+
+  useEffect(() => {
+      localStorage.setItem("persist", persist);
+  },[persist]) // whenever persist changes, set an item called "persist" in local storage to the new value
 
   return (
     <div className="bg-grayscale-5 w-[32rem] h-[36rem] rounded-5xl drop-shadow-2xl shadow-black/50 p-8 flex flex-col gap-12">
@@ -85,6 +93,16 @@ function LoginForm() {
           Forgot password?
         </a>
         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+      </div>
+
+      <div>
+        <input
+          type="checkbox"
+          id="persist"
+          onChange={togglePersist}
+          checked={persist}
+        />
+        <label htmlFor="persist">Trust this device?</label>
       </div>
 
       <div className="flex gap-2">
