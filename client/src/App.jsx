@@ -1,12 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import Layout from './routes/Layout';
-import Public from './routes/Public';
-import Login from './routes/Login';
-import DashLayout from './routes/DashLayout';
-import NotFound from './routes/NotFound';
-import DashHome from './routes/DashHome';
-import RequireAuth from './components/RequireAuth';
+import { Route, Routes } from 'react-router-dom';
 import PersistLogin from './components/PersistLogin';
+import RequireAuth from './components/RequireAuth';
+import DashHome from './routes/DashHome';
+import DashLayout from './routes/DashLayout';
+import Layout from './routes/Layout';
+import Login from './routes/Login';
+import NotFound from './routes/NotFound';
+import Public from './routes/Public';
 
 function App() {
   return (

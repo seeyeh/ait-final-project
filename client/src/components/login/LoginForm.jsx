@@ -71,7 +71,7 @@ function LoginForm() {
   return (
     <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl bg-grayscale-5 p-8 shadow-black/50 drop-shadow-2xl">
       <h1 className="text-h2 text-black">Login</h1>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-8">
         <div className="flex w-full flex-1 flex-col gap-4">
           <Input
             id="username"
