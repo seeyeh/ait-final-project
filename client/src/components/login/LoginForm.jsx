@@ -68,51 +68,61 @@ function LoginForm() {
   },[persist]) // whenever persist changes, set an item called "persist" in local storage to the new value
 
   return (
-    <div className="bg-grayscale-5 w-[32rem] h-[36rem] rounded-5xl drop-shadow-2xl shadow-black/50 p-8 flex flex-col gap-12">
-      <h1 className="text-h1 text-black">Login</h1>
-      <div className="w-full flex-1 flex flex-col gap-4">
-        <Input
-          id="username"
-          header="Username"
-          className="w-full"
-          ref={userRef}
-          onChange={(e)=>setUser(e.target.value)}
-          value={user}
-          required
-        />
-        <Input
-          id="password"
-          header="Password"
-          className="w-full"
-          type="password"
-          onChange={(e)=>setPwd(e.target.value)}
-          value={pwd}
-          required
-        />
-        <a href="/login" className="text-lg text-grayscale-60 self-end">
-          Forgot password?
-        </a>
-        <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+    <div className="bg-grayscale-5 w-[24rem] h-fit rounded-5xl drop-shadow-2xl shadow-black/50 p-8 flex flex-col gap-6">
+      <h1 className="text-h2 text-black">Login</h1>
+      <div className="flex flex-col gap-4">
+        <div className="w-full flex-1 flex flex-col gap-4">
+          <Input
+            id="username"
+            header="Username"
+            className="w-full text-h4"
+            ref={userRef}
+            onChange={(e)=>setUser(e.target.value)}
+            value={user}
+            required
+          />
+          <Input
+            id="password"
+            header="Password"
+            className="w-full"
+            type="password"
+            onChange={(e)=>setPwd(e.target.value)}
+            value={pwd}
+            required
+          />
+          <div className="flex flex-row justify-between content-center">
+            <p ref={errRef} className={"text-pink-medium text-p"} aria-live="assertive">{errMsg}</p>
+            <a href="/login" className="text-lg text-grayscale-60">
+              Forgot password?
+            </a>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-row gap-2 text-h6 text-grayscale-80 content-center">
+            <input
+              type="checkbox"
+              id="persist"
+              className="appearance-none w-5 h-5 border-2 rounded-md bg-white checked:bg-green-light transition-colors"
+              onChange={togglePersist}
+              checked={persist}
+            />
+            <label htmlFor="persist">Stay signed in?</label>
+          </div>
+
+          <div className="flex gap-2">
+            <Button variant="pink" hover="gray" size="lg" onClick={handleSubmit}>
+              Next
+            </Button>
+            <Button hover="gray" size="lg">
+              Create an account
+            </Button>
+          </div>
+        </div>
+
+      
       </div>
 
-      <div>
-        <input
-          type="checkbox"
-          id="persist"
-          onChange={togglePersist}
-          checked={persist}
-        />
-        <label htmlFor="persist">Trust this device?</label>
-      </div>
-
-      <div className="flex gap-2">
-        <Button variant="pink" hover="gray" size="lg" onClick={handleSubmit}>
-          Next
-        </Button>
-        <Button hover="gray" size="lg">
-          Create an account
-        </Button>
-      </div>
     </div>
   );
 }
