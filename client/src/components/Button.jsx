@@ -1,7 +1,7 @@
-import { forwardRef } from 'react';
-import PropTypes from 'prop-types';
-import { cn } from '../lib/utils';
 import { cva } from 'class-variance-authority';
+import PropTypes from 'prop-types';
+import { forwardRef } from 'react';
+import { cn } from '../lib/utils';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center transition-colors rounded-full',
@@ -14,7 +14,7 @@ const buttonVariants = cva(
       },
       size: {
         default: 'px-3 text-base',
-        lg: 'px-3 text-2xl'
+        lg: 'px-3 py-1 text-h6'
       },
       hover: {
         gray: 'hover:bg-grayscale-80 hover:text-white',
