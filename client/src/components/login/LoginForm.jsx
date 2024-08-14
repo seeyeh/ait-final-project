@@ -69,69 +69,72 @@ function LoginForm() {
   }, [persist]); // whenever persist changes, set an item called "persist" in local storage to the new value
 
   return (
-    <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl bg-grayscale-5 p-8 shadow-black/50 drop-shadow-2xl">
-      <h1 className="text-h2 text-black">Login</h1>
-      <div className="flex flex-col gap-8">
-        <div className="flex w-full flex-1 flex-col gap-4">
-          <Input
-            id="username"
-            header="Username"
-            className="w-full text-h4"
-            ref={userRef}
-            onChange={(e) => setUser(e.target.value)}
-            value={user}
-            required
-          />
-          <Input
-            id="password"
-            header="Password"
-            className="w-full"
-            type="password"
-            onChange={(e) => setPwd(e.target.value)}
-            value={pwd}
-            required
-          />
-          <div className="flex flex-row items-center justify-between">
-            <p
-              ref={errRef}
-              className={'text-p text-pink-medium'}
-              aria-live="assertive"
-            >
-              {errMsg}
-            </p>
-            <a href="/login" className="text-p text-grayscale-60">
-              Forgot password?
-            </a>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-row content-center gap-2 text-h6 text-grayscale-80">
-            <input
-              type="checkbox"
-              id="persist"
-              className="h-5 w-5 appearance-none rounded-md border-2 bg-white transition-colors checked:bg-green-light"
-              onChange={togglePersist}
-              checked={persist}
+    <div>
+      <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-sm backdrop-brightness-95">
+        <h1 className="text-h2 text-black">Login</h1>
+        <div className="flex flex-col gap-8">
+          <div className="flex w-full flex-1 flex-col gap-4">
+            <Input
+              id="username"
+              header="Username"
+              className="w-full text-h4"
+              ref={userRef}
+              onChange={(e) => setUser(e.target.value)}
+              value={user}
+              required
             />
-            <label htmlFor="persist">Stay signed in?</label>
+            <Input
+              id="password"
+              header="Password"
+              className="w-full"
+              type="password"
+              onChange={(e) => setPwd(e.target.value)}
+              value={pwd}
+              required
+            />
+            <div className="flex flex-row items-center justify-between">
+              <p
+                ref={errRef}
+                className={'text-p text-pink-medium'}
+                aria-live="assertive"
+              >
+                {errMsg}
+              </p>
+              <a href="/login" className="text-p text-grayscale-60">
+                Forgot password?
+              </a>
+            </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="pink"
-              hover="gray"
-              size="lg"
-              onClick={handleSubmit}
-            >
-              Next
-            </Button>
-            <Button hover="gray" size="lg">
-              Create an account
-            </Button>
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-row content-center gap-2 text-h6 text-grayscale-80">
+              <input
+                type="checkbox"
+                id="persist"
+                className="h-5 w-5 appearance-none rounded-md border bg-white transition-colors checked:bg-green-light"
+                onChange={togglePersist}
+                checked={persist}
+              />
+              <label htmlFor="persist">Stay signed in?</label>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="pink"
+                hover="gray"
+                size="lg"
+                onClick={handleSubmit}
+              >
+                Next
+              </Button>
+              <Button hover="gray" size="lg">
+                Create an account
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]"></div>
     </div>
   );
 }
