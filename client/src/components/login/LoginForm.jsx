@@ -111,7 +111,7 @@ function LoginForm() {
               <input
                 type="checkbox"
                 id="persist"
-                className="h-5 w-5 appearance-none rounded-md border bg-white transition-colors checked:bg-green-light"
+                className="h-5 w-5 appearance-none rounded-lg border-2 bg-white transition-colors checked:border-green-dark checked:bg-green-light checked:shadow-[0px_0px_25px] checked:shadow-green-light"
                 onChange={togglePersist}
                 checked={persist}
               />
