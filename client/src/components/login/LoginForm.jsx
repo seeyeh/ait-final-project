@@ -100,7 +100,7 @@ function LoginForm() {
               >
                 {errMsg}
               </p>
-              <a href="/login" className="text-p text-grayscale-60">
+              <a href="/login" className="text-p text-grayscale-60 underline">
                 Forgot password?
               </a>
             </div>
