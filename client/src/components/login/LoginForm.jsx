@@ -70,7 +70,7 @@ function LoginForm() {
 
   return (
     <div>
-      <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-[1px] backdrop-brightness-95">
+      <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-[1px] backdrop-brightness-90">
         <h1 className="text-h2 text-black">Login</h1>
         <div className="flex flex-col gap-8">
           <div className="flex w-full flex-1 flex-col gap-4">

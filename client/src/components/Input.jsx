@@ -17,7 +17,9 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
       />
       <label
         htmlFor={id}
-        className="w-fit bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white"
+        className={cn(
+          'w-fit bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white'
+        )}
       >
         {header}
       </label>
@@ -28,7 +30,8 @@ Input.displayName = 'Input';
 Input.propTypes = {
   id: PropTypes.string,
   header: PropTypes.string.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  labelHidden: PropTypes.boolean
 };
 
 export default Input;

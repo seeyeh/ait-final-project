@@ -5,7 +5,7 @@ const ParchmentSection = ({ children, header }) => {
   return (
     <div
       className={cn(
-        'flex h-fit w-[24rem] flex-col gap-6 rounded-2xl border border-grayscale-25 p-5 shadow-2xl backdrop-blur-[2px] backdrop-brightness-95'
+        'flex h-fit w-[24rem] flex-col gap-1 rounded-2xl border border-grayscale-25 p-3 shadow-2xl backdrop-blur-[2px] backdrop-brightness-95'
       )}
     >
       <h2 className="text-h5">{header}</h2>
