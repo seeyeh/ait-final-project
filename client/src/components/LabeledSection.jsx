@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { cva } from 'class-variance-authority';
+import PropTypes from 'prop-types';
 import { cn } from '../lib/utils';
 
 const labelVariants = cva('w-fit text-3xl px-1 leading-none', {
@@ -26,11 +26,11 @@ function LabeledSection({
   containerClassName
 }) {
   return (
-    <section className={cn('flex flex-col w-fit', containerClassName)}>
+    <section className={cn('flex w-fit flex-col', containerClassName)}>
       <h2 className={cn(labelVariants({ color }))}>{label}</h2>
       <div
         className={cn(
-          'w-full bg-grayscale-5 rounded-r-3xl rounded-bl-3xl p-2 gap-2',
+          'w-full gap-2 rounded-r-3xl rounded-bl-3xl bg-grayscale-5 p-4',
           className
         )}
       >
