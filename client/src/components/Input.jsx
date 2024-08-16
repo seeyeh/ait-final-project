@@ -30,8 +30,7 @@ Input.displayName = 'Input';
 Input.propTypes = {
   id: PropTypes.string,
   header: PropTypes.string.isRequired,
-  className: PropTypes.string,
-  labelHidden: PropTypes.boolean
+  className: PropTypes.string
 };
 
 export default Input;

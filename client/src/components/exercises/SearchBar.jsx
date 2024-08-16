@@ -29,9 +29,8 @@ const SearchBar = forwardRef(({ id, className, header, ...props }, ref) => {
 SearchBar.displayName = 'Input';
 SearchBar.propTypes = {
   id: PropTypes.string,
-  header: PropTypes.string.isRequired,
-  className: PropTypes.string,
-  labelHidden: PropTypes.boolean
+  header: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default SearchBar;
