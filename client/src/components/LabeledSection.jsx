@@ -10,7 +10,11 @@ const labelVariants = cva('w-fit text-3xl px-1 leading-none', {
       pink: 'bg-pink-light text-pink-dark',
       green: 'bg-green-light text-green-dark',
       yellow: 'bg-yellow-light text-yellow-dark',
-      orange: 'bg-orange-light text-orange-dark'
+      orange: 'bg-orange-light text-orange-dark',
+      blackBlue: 'bg-grayscale-90 text-blue-light'
+    },
+    size: {
+      xl: 'text-xl'
     }
   },
   defaultVariants: {
@@ -22,15 +26,16 @@ function LabeledSection({
   label,
   children,
   color,
+  size,
   className,
   containerClassName
 }) {
   return (
-    <section className={cn('flex w-fit flex-col', containerClassName)}>
-      <h2 className={cn(labelVariants({ color }))}>{label}</h2>
+    <section className={cn('flex w-full flex-col', containerClassName)}>
+      <h2 className={cn(labelVariants({ color, size }))}>{label}</h2>
       <div
         className={cn(
-          'w-full gap-2 rounded-r-3xl rounded-bl-3xl bg-grayscale-5 p-4',
+          'w-full gap-2 rounded-r-3xl rounded-bl-3xl bg-grayscale-5 p-3 text-small',
           className
         )}
       >
@@ -43,6 +48,7 @@ function LabeledSection({
 LabeledSection.propTypes = {
   label: PropTypes.string.isRequired,
   color: PropTypes.string,
+  size: PropTypes.string,
   className: PropTypes.string,
   containerClassName: PropTypes.string,
   children: PropTypes.arrayOf(PropTypes.node)

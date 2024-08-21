@@ -64,8 +64,8 @@ export default {
         h4: ['2.25rem', { lineHeight: '112%', letterSpacing: '-1px' }],
         h5: ['1.75rem', { lineHeight: '112%', letterSpacing: '-1px' }],
         h6: ['1.25rem', { lineHeight: '112%', letterSpacing: '-0.5px' }],
-        p: ['1rem', { letterSpacing: '-0.15px' }],
-        small: ['0.75rem', '0.75rem']
+        p: ['1rem', { lineHeight: '130%', letterSpacing: '-0.15px' }],
+        small: ['0.75rem', { lineHeight: '130%', letterSpacing: '-0.15px' }]
       }
     }
   },

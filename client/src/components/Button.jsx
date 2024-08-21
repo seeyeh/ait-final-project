@@ -10,16 +10,19 @@ const buttonVariants = cva(
       variant: {
         dark: 'bg-grayscale-80 text-grayscale-25',
         light: 'bg-white text-grayscale-60',
-        pink: 'bg-pink-medium text-white'
+        pink: 'bg-pink-medium text-white',
+        yellow: 'bg-yellow-light text-black'
       },
       size: {
         default: 'px-3 text-base',
+        small: 'px-1 text-p',
         lg: 'px-3 py-1 text-h6'
       },
       hover: {
         gray: 'hover:bg-grayscale-80 hover:text-white',
         lightpink: 'hover:bg-white hover:text-pink-medium',
-        pink: 'hover:bg-pink-medium hover:text-white'
+        pink: 'hover:bg-pink-medium hover:text-white',
+        yellow: 'hover:bg-yellow-dark hover:text-yellow-light'
       }
     },
     defaultVariants: {

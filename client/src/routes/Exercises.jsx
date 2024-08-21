@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+import LabeledSection from '../components/LabeledSection';
 import ParchmentSection from '../components/ParchmentSection';
 import SearchBar from '../components/exercises/SearchBar';
 import SearchOption from '../components/exercises/SearchOption';
+import StickyNote from '../components/exercises/StickyNote';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const Exercises = () => {
@@ -13,6 +16,7 @@ const Exercises = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState();
+  const [selectedNotes, setSelectedNotes] = useState(selected?.notes || []);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +56,25 @@ const Exercises = () => {
     }
   };
 
+  const addNote = () => {
+    setSelectedNotes((prev) => {
+      return [...prev, ''];
+    });
+  };
+
+  const stickyList = selectedNotes?.map((note, index) => {
+    return (
+      <StickyNote
+        exercise={selected?.name}
+        editing={note === '' ? true : false}
+        index={index}
+        key={index}
+      >
+        {note}
+      </StickyNote>
+    );
+  });
+
   const exercisesList = exercises?.map((entry, index) => {
     return (
       <SearchOption id={entry.name} key={index} onClick={openExercise}>
@@ -77,10 +100,31 @@ const Exercises = () => {
             {exercisesList}
           </div>
         </ParchmentSection>
-        <ParchmentSection className="h-[30rem]">
-          {selected._id}
-          <h4 className="text-h4">{selected.name}</h4>
-        </ParchmentSection>
+        {selected?._id && (
+          <ParchmentSection className="flex h-fit gap-2">
+            {selected?._id}
+            <h4 className="text-h5">{selected?.name}</h4>
+            <div className="flex h-fit w-full flex-col gap-2 rounded-xl">
+              <div className="h-[12rem] w-full rounded-xl bg-grayscale-25"></div>
+              <div className="flex h-fit w-full flex-col gap-2">
+                <button className="h-[4rem] w-[6rem] rounded-xl border-2 border-grayscale-25 bg-grayscale-25 transition-colors focus:border-grayscale-90"></button>
+              </div>
+            </div>
+            <LabeledSection
+              color="blackBlue"
+              size="xl"
+              label="Instructions"
+              className="w-full bg-blue-light"
+            >
+              {selected?.instructions ||
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend elit in efficitur eleifend. Etiam eget nisl non urna sollicitudin dictum. Nam pretium massa vel felis imperdiet, sed mattis erat pretium. In vel nunc purus.'}
+            </LabeledSection>
+            <Button className="w-fit" onClick={addNote}>
+              + Add Sticky Note
+            </Button>
+            <div className="flex flex-row gap-2">{stickyList}</div>
+          </ParchmentSection>
+        )}
       </div>
     </div>
   );
