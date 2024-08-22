@@ -41,8 +41,8 @@ app.use('/', Express.static(path.join(__dirname, '/public'))); // telling expres
 
 app.use('/', router);
 app.use('/auth', authRouter);
-app.use(verifyJWT); // everything below this will have to go through verifying the JWT first (i.e. everything below requires a valid token first
 app.use('/users', usersRouter);
+app.use(verifyJWT); // everything below this will have to go through verifying the JWT first (i.e. everything below requires a valid token first
 app.use('/workouts', workoutsRouter);
 app.use('/exercises', exercisesRouter);
 app.use('/templates', templatesRouter);

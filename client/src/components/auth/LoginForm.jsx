@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth.js';
 import Button from '../Button';
 import Input from '../Input';
@@ -130,17 +130,18 @@ function LoginForm() {
               >
                 Next
               </Button>
-              <Button
-                hover="gray"
-                size="lg"
-              >
-                Create an account
-              </Button>
+              <Link to="/sign-up">
+                <Button
+                  hover="gray"
+                  size="lg"
+                >
+                  Create an account
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]"></div>
     </div>
   );
 }

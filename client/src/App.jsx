@@ -7,6 +7,7 @@ import Layout from './routes/Layout';
 import Login from './routes/Login';
 import NotFound from './routes/NotFound';
 import Public from './routes/Public';
+import SignUp from './routes/SignUp';
 
 function App() {
   return (
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="login"
           element={<Login />}
+        />
+        <Route
+          path="sign-up"
+          element={<SignUp />}
         />
 
         {/* Protected routes */}
