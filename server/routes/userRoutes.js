@@ -1,13 +1,14 @@
 import Express from 'express';
 import usersController from '../controllers/usersController.js';
+import verifyJWT from '../middleware/verifyJWT.js';
 
 const usersRouter = Express.Router();
 
 usersRouter
   .route('/')
-  .get(usersController.getUser)
+  .get(verifyJWT, usersController.getUser)
   .post(usersController.createNewUser)
-  .patch(usersController.updateUser)
-  .delete(usersController.deleteUser);
+  .patch(verifyJWT, usersController.updateUser)
+  .delete(verifyJWT, usersController.deleteUser);
 
 export default usersRouter;
