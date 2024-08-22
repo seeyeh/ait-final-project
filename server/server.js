@@ -7,20 +7,20 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import authRouter from './routes/authRoutes.js';
+import exercisesRouter from './routes/exerciseRoutes.js';
 import router from './routes/root.js';
+import splitsRouter from './routes/splitRoutes.js';
+import templatesRouter from './routes/templateRoutes.js';
 import usersRouter from './routes/userRoutes.js';
 import workoutsRouter from './routes/workoutRoutes.js';
-import exercisesRouter from './routes/exerciseRoutes.js';
-import templatesRouter from './routes/templateRoutes.js';
-import splitsRouter from './routes/splitRoutes.js';
-import authRouter from './routes/authRoutes.js';
 
-import { logger } from './middleware/logger.js';
-import errorHandler from './middleware/errorHandler.js';
-import verifyJWT from './middleware/verifyJWT.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
+import errorHandler from './middleware/errorHandler.js';
+import { logger } from './middleware/logger.js';
+import verifyJWT from './middleware/verifyJWT.js';
 
 const app = Express(); // actual server object
 const PORT = process.env.PORT || 5001;

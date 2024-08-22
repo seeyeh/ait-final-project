@@ -1,7 +1,7 @@
-import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 // @desc Login
 // @route POST /auth
@@ -74,7 +74,8 @@ const refresh = asyncHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET,
     asyncHandler(async (err, decoded) => {
       // if error or the username that was recorded in the refreshToken does not match with the username of the user we searched for with the refreshToken (something could've been tampered with!)
-      if (err || foundUser.username !== decoded.username) return res.status(403).json({ message: 'Forbidden' });
+      if (err || foundUser.username !== decoded.username)
+        return res.status(403).json({ message: 'Forbidden' });
 
       const accessToken = jwt.sign(
         {
@@ -97,8 +98,8 @@ const refresh = asyncHandler(async (req, res) => {
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
-    return res.status(204)
-   } // No content; request successful there was no jwt cookie
+    return res.status(204);
+  } // No content; request successful there was no jwt cookie
   const refreshToken = cookies.jwt;
   // Delete refreshToken in the database
   const foundUser = await User.findOne({ refreshToken: refreshToken });

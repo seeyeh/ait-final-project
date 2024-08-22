@@ -11,20 +11,38 @@ import Public from './routes/Public';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Public />} />
-        <Route path="login" element={<Login />} />
+      <Route
+        path="/"
+        element={<Layout />}
+      >
+        <Route
+          index
+          element={<Public />}
+        />
+        <Route
+          path="login"
+          element={<Login />}
+        />
 
         {/* Protected routes */}
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth />}>
-            <Route path="dash" element={<DashLayout />}>
-              <Route index element={<DashHome />} />
+            <Route
+              path="dash"
+              element={<DashLayout />}
+            >
+              <Route
+                index
+                element={<DashHome />}
+              />
             </Route>
           </Route>
         </Route>
 
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
       </Route>
     </Routes>
   );

@@ -1,6 +1,7 @@
 import Express from 'express';
-const exercisesRouter = Express.Router();
 import exercisesController from '../controllers/exercisesController.js';
+
+const exercisesRouter = Express.Router();
 
 exercisesRouter
   .route('/')

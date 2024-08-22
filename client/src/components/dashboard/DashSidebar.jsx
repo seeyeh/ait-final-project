@@ -1,7 +1,7 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useLogout from '../../hooks/useLogout.js';
 import { cn } from '../../lib/utils';
 import Button from '../Button';
-import useLogout from '../../hooks/useLogout.js';
 
 // import useAxiosPrivate from '../../hooks/useAxiosPrivate.js'; // not used yet, but will be needed when we start making requests to API for data to be displayed
 
@@ -17,23 +17,26 @@ const DashSidebar = () => {
   let goHomeButton = null;
   if (pathname !== '/dash') {
     goHomeButton = (
-      <button title="Home" onClick={onGoHomeClicked}>
+      <button
+        title="Home"
+        onClick={onGoHomeClicked}
+      >
         Home
       </button>
     );
   }
 
   const handleLogout = async () => {
-      await logout();
-      navigate('/', { replace: true });
-  }
+    await logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <aside
       className={cn(
-        'w-80 min-w-80 h-screen max-h-screen min-h-screen',
-        'overflow-x-clip overflow-y-hidden no-scrollbar',
-        'bg-grayscale-5 flex flex-col py-12 px-9'
+        'h-screen max-h-screen min-h-screen w-80 min-w-80',
+        'no-scrollbar overflow-y-hidden overflow-x-clip',
+        'flex flex-col bg-grayscale-5 px-9 py-12'
       )}
     >
       {goHomeButton}
@@ -44,11 +47,11 @@ const DashSidebar = () => {
       >
         Logout
       </Button>
-      <div className="shadow-glow-lg shadow-pink-medium rounded-3xl w-full h-fit">
+      <div className="h-fit w-full rounded-3xl shadow-glow-lg shadow-pink-medium">
         <Button
           variant="pink"
           hover="lightpink"
-          className="text-7xl rounded-3xl w-full justify-start"
+          className="w-full justify-start rounded-3xl text-7xl"
         >
           Start
         </Button>

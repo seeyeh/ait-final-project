@@ -100,7 +100,10 @@ function LoginForm() {
               >
                 {errMsg}
               </p>
-              <a href="/login" className="text-p text-grayscale-60 underline">
+              <a
+                href="/login"
+                className="text-p text-grayscale-60 underline"
+              >
                 Forgot password?
               </a>
             </div>
@@ -127,7 +130,10 @@ function LoginForm() {
               >
                 Next
               </Button>
-              <Button hover="gray" size="lg">
+              <Button
+                hover="gray"
+                size="lg"
+              >
                 Create an account
               </Button>
             </div>

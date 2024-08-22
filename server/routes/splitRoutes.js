@@ -1,6 +1,7 @@
 import Express from 'express';
-const splitsRouter = Express.Router();
 import splitsController from '../controllers/splitsController.js';
+
+const splitsRouter = Express.Router();
 
 splitsRouter
   .route('/')

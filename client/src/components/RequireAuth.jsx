@@ -10,7 +10,11 @@ const RequireAuth = () => {
   return auth?.accessToken ? (
     <Outlet />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate
+      to="/login"
+      state={{ from: location }}
+      replace
+    />
   );
 
   // The Outlet component: all the children of requireAuth; components protected by whether or not user is logged in

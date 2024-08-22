@@ -1,10 +1,10 @@
-import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import asyncHandler from 'express-async-handler';
 import Exercise from '../models/Exercise.js';
 import Split from '../models/Split.js';
-import Workout from '../models/Workout.js';
 import Template from '../models/Template.js';
-import asyncHandler from 'express-async-handler';
-import bcrypt from 'bcrypt';
+import User from '../models/User.js';
+import Workout from '../models/Workout.js';
 
 const UserSchemaFields = Object.freeze({
   _id: Symbol('_id'),
@@ -18,7 +18,10 @@ const UserSchemaFields = Object.freeze({
 // @access Private
 const getUser = asyncHandler(async (req, res) => {
   for (let field in req.query) {
-    if (field in UserSchemaFields === false) return res.status(400).json({ message: `Invalid query field '${field}'` });
+    if (field in UserSchemaFields === false)
+      return res
+        .status(400)
+        .json({ message: `Invalid query field '${field}'` });
   }
 
   const users = await User.find(req.query).select('-password').lean(); // retrieves a User doc
@@ -36,7 +39,9 @@ const createNewUser = asyncHandler(async (req, res) => {
 
   // Confirm data (both username and password need to be in request body)
   if (!username || !password) {
-    return res.status(400).json({ message: 'username and password fields are required' });
+    return res
+      .status(400)
+      .json({ message: 'username and password fields are required' });
   }
 
   // Check for duplicates
@@ -66,7 +71,9 @@ const updateUser = asyncHandler(async (req, res) => {
   const { username, patches } = req.body;
   // Confirm data (at a minimum, id and username have to be in req body)
   if (!username || !patches) {
-    return res.status(400).json({ message: 'username and patches fields are required' });
+    return res
+      .status(400)
+      .json({ message: 'username and patches fields are required' });
   }
   const user = await User.findOne({ username }).exec(); // Get the actual specific User document we want to update and save by ID
   if (!user) return res.status(400).json({ message: 'User not found' });
@@ -102,10 +109,16 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   // const exercises = await Exercise.find({ 'parentUser':user._id }).exec();
   // const exerciseResult = await exercises.deleteMany();
-  const exerciseResult = await Exercise.deleteMany({ parentUser: user._id }).exec();
+  const exerciseResult = await Exercise.deleteMany({
+    parentUser: user._id
+  }).exec();
   const splitResult = await Split.deleteMany({ parentUser: user._id }).exec();
-  const workoutResult = await Workout.deleteMany({ parentUser: user._id }).exec();
-  const templateResult = await Template.deleteMany({ parentUser: user._id }).exec();
+  const workoutResult = await Workout.deleteMany({
+    parentUser: user._id
+  }).exec();
+  const templateResult = await Template.deleteMany({
+    parentUser: user._id
+  }).exec();
 
   await user.deleteOne().exec(); // deletes User document; result holds deleted user's information
   const reply = `Deleted ${exerciseResult.deletedCount} exercises, ${splitResult.deletedCount} splits, ${workoutResult.deletedCount} workouts, and ${templateResult.deletedCount} templates. User ${user.username} with ID ${user._id} deleted`;
@@ -116,7 +129,8 @@ const patchUser = async function (user, op, path, value) {
   switch (op) {
     // replace operation for username and password fields
     case 'replace':
-      if (typeof value !== 'string') return { error: 'Invalid patch value, must be a string' };
+      if (typeof value !== 'string')
+        return { error: 'Invalid patch value, must be a string' };
 
       if (path === 'username') {
         // Check for duplicate

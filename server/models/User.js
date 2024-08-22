@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
+import Exercise from './Exercise.js';
 import Split from './Split.js';
 import Template from './Template.js';
 import Workout from './Workout.js';
-import Exercise from './Exercise.js';
 
 const UserSchema = new mongoose.Schema({
   username: {
