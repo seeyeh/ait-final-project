@@ -45,7 +45,11 @@ LabeledSection.propTypes = {
   color: PropTypes.string,
   className: PropTypes.string,
   containerClassName: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.node)
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+    PropTypes.func
+  ])
 };
 
 export default LabeledSection;

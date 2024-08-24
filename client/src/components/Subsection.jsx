@@ -9,7 +9,11 @@ function Subsection({ children, className }) {
 
 Subsection.propTypes = {
   className: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.node)
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+    PropTypes.func
+  ])
 };
 
 export default Subsection;
