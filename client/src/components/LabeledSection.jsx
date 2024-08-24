@@ -1,6 +1,6 @@
+import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import PropTypes from 'prop-types';
-import { cn } from '../lib/utils';
 
 const labelVariants = cva('w-fit text-3xl px-1 leading-none', {
   variants: {

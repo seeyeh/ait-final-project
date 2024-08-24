@@ -1,5 +1,5 @@
-import LabeledSection from '../components/LabeledSection';
-import Subsection from '../components/Subsection';
+import LabeledSection from '@/components/LabeledSection';
+import Subsection from '@/components/Subsection';
 
 function DashHome() {
   return (

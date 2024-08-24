@@ -1,6 +1,6 @@
+import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-import { cn } from '../lib/utils';
 const Input = forwardRef(({ id, className, header, ...props }, ref) => {
   // props needed: header, type, placeholder, handleChange, name, value
   return (

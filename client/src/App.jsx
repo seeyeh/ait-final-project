@@ -1,13 +1,13 @@
+import PersistLogin from '@/components/PersistLogin';
+import RequireAuth from '@/components/RequireAuth';
+import DashHome from '@/routes/DashHome';
+import DashLayout from '@/routes/DashLayout';
+import Layout from '@/routes/Layout';
+import Login from '@/routes/Login';
+import NotFound from '@/routes/NotFound';
+import Public from '@/routes/Public';
+import SignUp from '@/routes/SignUp';
 import { Route, Routes } from 'react-router-dom';
-import PersistLogin from './components/PersistLogin';
-import RequireAuth from './components/RequireAuth';
-import DashHome from './routes/DashHome';
-import DashLayout from './routes/DashLayout';
-import Layout from './routes/Layout';
-import Login from './routes/Login';
-import NotFound from './routes/NotFound';
-import Public from './routes/Public';
-import SignUp from './routes/SignUp';
 
 function App() {
   return (

@@ -1,5 +1,5 @@
-import axios from '../api/axios';
-import useAuth from './useAuth';
+import axios from '@/api/axios';
+import useAuth from '@/hooks/useAuth';
 
 // Sends a GET request to our Auth API to get a new access token (b/c our previous one has expired). Looks in our Cookies for our refreshToken that's in a HttpOnly cookie.
 const useRefreshToken = () => {

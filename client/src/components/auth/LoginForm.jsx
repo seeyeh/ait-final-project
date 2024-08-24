@@ -1,10 +1,11 @@
+import axios from '@/api/axios';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import useAuth from '@/hooks/useAuth';
+
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth.js';
-import Button from '../Button';
-import Input from '../Input';
 
-import axios from '../../api/axios.js';
 const LOGIN_URL = '/auth';
 
 function LoginForm() {

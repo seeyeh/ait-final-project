@@ -1,7 +1,7 @@
+import Button from '@/components/Button';
+import useLogout from '@/hooks/useLogout';
+import { cn } from '@/lib/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useLogout from '../../hooks/useLogout.js';
-import { cn } from '../../lib/utils';
-import Button from '../Button';
 
 // import useAxiosPrivate from '../../hooks/useAxiosPrivate.js'; // not used yet, but will be needed when we start making requests to API for data to be displayed
 

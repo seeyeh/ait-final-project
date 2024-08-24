@@ -1,5 +1,5 @@
+import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
-import { cn } from '../lib/utils';
 
 function Subsection({ children, className }) {
   return (

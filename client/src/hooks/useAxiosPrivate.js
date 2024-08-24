@@ -1,9 +1,9 @@
 // axiosPrivate is used because it's an instance of axios that we've written a bunch of interceptors for in hooks/useAxiosPrivate.js that do the work of attaching necessary headers to first-time requests to the API (e.g. Authorization: "Bearer _____") where the accessToken needs to be attached or else they won't be authorized, and generating new accessTokens if they've expired, all without the user noticing anything
 
+import { axiosPrivate } from '@/api/axios';
+import useAuth from '@/hooks/useAuth';
+import useRefreshToken from '@/hooks/useRefreshToken';
 import { useEffect } from 'react';
-import { axiosPrivate } from '../api/axios';
-import useAuth from './useAuth';
-import useRefreshToken from './useRefreshToken';
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
