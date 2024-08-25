@@ -52,12 +52,9 @@ function SignUpForm() {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
 
-  const { formState, handleSubmit, register, watch, setError } = useForm();
-
-  // Set focus on username input when component loads;
-  // useEffect(() => {
-  //   userRef.current.focus();
-  // }, []);
+  const { formState, handleSubmit, register, watch, setError } = useForm({
+    mode: 'onTouched'
+  });
 
   const errorMessage =
     formState.errors.root?.serverError?.message ??
@@ -66,7 +63,6 @@ function SignUpForm() {
     formState.errors.confirm?.message;
 
   const onSubmit = async (formData) => {
-    console.log(formData);
     const { username, password, persist } = formData;
 
     try {
@@ -126,7 +122,7 @@ function SignUpForm() {
 
   return (
     <div className="my-auto flex h-fit w-[24rem] max-w-full flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-[1px] backdrop-brightness-95">
-      <h1 className="text-h2 text-black">Sign Up</h1>
+      <h1 className="text-nowrap text-h2 text-black">Sign Up</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-8"
@@ -135,19 +131,19 @@ function SignUpForm() {
           <Input
             header="Username"
             id="username"
-            className="w-full text-h4"
+            className="w-full min-w-32"
             {...register('username', usernameValidation)}
           />
           <Input
             header="Password"
             id="password"
-            className="w-full"
+            className="w-full min-w-32"
             type="password"
             {...register('password', passwordValidation)}
           />
           <Input
             header="Confirm password"
-            className="w-full"
+            className="w-full min-w-32"
             id="confirm"
             type="password"
             {...register('confirm', {
