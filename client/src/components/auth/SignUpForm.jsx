@@ -1,5 +1,6 @@
 import axios from '@/api/axios';
 import Button from '@/components/Button';
+import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
@@ -129,20 +130,20 @@ function SignUpForm() {
       >
         <div className="flex w-full flex-1 flex-col gap-4">
           <Input
-            header="Username"
+            label="Username"
             id="username"
             className="w-full min-w-32"
             {...register('username', usernameValidation)}
           />
           <Input
-            header="Password"
+            label="Password"
             id="password"
             className="w-full min-w-32"
             type="password"
             {...register('password', passwordValidation)}
           />
           <Input
-            header="Confirm password"
+            label="Confirm password"
             className="w-full min-w-32"
             id="confirm"
             type="password"
@@ -167,15 +168,11 @@ function SignUpForm() {
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className="flex flex-row content-center gap-2 text-h6 text-grayscale-80">
-            <input
-              type="checkbox"
-              id="persist"
-              className="max-h-5 min-h-5 min-w-5 max-w-5 appearance-none rounded-lg border-2 bg-white transition-colors checked:border-green-dark checked:bg-green-light checked:shadow-[0px_0px_25px] checked:shadow-green-light"
-              {...register('persist')}
-            />
-            <label htmlFor="persist">Stay signed in?</label>
-          </div>
+          <Checkbox
+            id="persist"
+            label="Stay signed in?"
+            {...register('persist')}
+          />
 
           <div className="flex flex-wrap gap-2">
             <Button
