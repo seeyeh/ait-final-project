@@ -41,7 +41,7 @@ const createNewUser = asyncHandler(async (req, res) => {
   if (!username || !password) {
     return res
       .status(400)
-      .json({ message: 'username and password fields are required' });
+      .json({ message: 'Username and password fields are required.' });
   }
 
   // Check for duplicates
@@ -60,7 +60,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     //created
     res.status(201).json({ message: `New user ${username} created` });
   } else {
-    res.status(400).json({ message: 'Invalid user data received' });
+    res.status(400).json({ message: 'Invalid user data received.' });
   }
 });
 
