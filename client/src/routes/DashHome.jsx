@@ -1,48 +1,49 @@
+import WeekCalendar from '@/components/dashboard/WeekCalendar';
 import LabeledSection from '@/components/LabeledSection';
 import Subsection from '@/components/Subsection';
 
 function DashHome() {
+  const today = new Date();
+  const date = today
+    .toLocaleDateString('en-US', { dateStyle: 'full' })
+    .split(',');
+
   return (
-    <div className="flex flex-wrap gap-x-12 gap-y-6">
-      <div className="flex w-full flex-col gap-6 lg:w-[calc(50%-1.5rem)]">
-        <h1 className="text-7xl">
-          Saturday,
-          <br /> December 25
+    <div className="flex w-full flex-wrap gap-x-12 gap-y-6">
+      <div className="flex w-fit max-w-full flex-1 flex-col gap-6">
+        <h1 className="w-full text-7xl">
+          {date[0]},
+          <br /> {date[1]}
         </h1>
         <LabeledSection
           label="This Week"
           color="green"
+          className="w-full min-w-[36rem] max-w-[44rem]"
         >
-          <h2>This Week</h2>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-          reiciendis vitae voluptate perspiciatis, illum dolor, similique soluta
-          asperiores totam doloremque magni neque animi unde ipsam a error
-          voluptatibus? Saepe, aliquam?
+          <WeekCalendar />
         </LabeledSection>
         <LabeledSection
           label="Workouts"
           color="pink"
         >
           <Subsection className="h-96">
-            <h2>Workouts</h2>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-            reiciendis vitae voluptate perspiciatis, illum dolor, similique
-            soluta asperiores totam doloremque magni neque animi unde ipsam a
-            error voluptatibus? Saepe, aliquam?
+            <h2 className="w-full">Workouts</h2>
+            {/* <p className="max-w-full">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
+              reiciendis vitae voluptate perspiciatis, illum dolor, similique
+              soluta asperiores totam doloremque magni neque animi unde ipsam a
+              error voluptatibus? Saepe, aliquam?
+            </p> */}
           </Subsection>
         </LabeledSection>
       </div>
-      <div className="flex w-full flex-col gap-6 lg:w-[calc(50%-1.5rem)]">
+      <div className="flex min-w-[30rem] flex-1 flex-col gap-6">
         <LabeledSection
           label="Log"
           color="yellow"
         >
           <Subsection className="h-[30rem]">
             <h2>Log</h2>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-            reiciendis vitae voluptate perspiciatis, illum dolor, similique
-            soluta asperiores totam doloremque magni neque animi unde ipsam a
-            error voluptatibus? Saepe, aliquam?
           </Subsection>
         </LabeledSection>
         <LabeledSection
@@ -51,10 +52,6 @@ function DashHome() {
         >
           <Subsection className="h-72">
             <h2>Stats</h2>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-            reiciendis vitae voluptate perspiciatis, illum dolor, similique
-            soluta asperiores totam doloremque magni neque animi unde ipsam a
-            error voluptatibus? Saepe, aliquam?
           </Subsection>
         </LabeledSection>
       </div>

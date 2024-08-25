@@ -26,7 +26,7 @@ function LabeledSection({
   containerClassName
 }) {
   return (
-    <section className={cn('flex w-fit flex-col', containerClassName)}>
+    <section className={cn('flex w-full flex-col', containerClassName)}>
       <h2 className={cn(labelVariants({ color }))}>{label}</h2>
       <div
         className={cn(

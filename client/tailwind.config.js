@@ -18,7 +18,7 @@ export default {
       },
       green: {
         light: 'var(--green-light)',
-        medium: 'var(--green-med)',
+        medium: 'var(--green-medium)',
         dark: 'var(--green-dark)'
       },
       pink: {
