@@ -17,7 +17,7 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
       />
       <label
         htmlFor={id}
-        className="w-fit bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white"
+        className="w-fit text-ellipsis text-nowrap bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white"
       >
         {header}
       </label>
