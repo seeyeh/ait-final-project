@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 function Subsection({ children, className }) {
   return (
-    <div className={cn('w-full rounded-2xl bg-white p-3', className)}>
-      {children}
-    </div>
+    <div className={cn('rounded-2xl bg-white p-3', className)}>{children}</div>
   );
 }
 

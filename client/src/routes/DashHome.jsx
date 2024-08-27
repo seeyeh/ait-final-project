@@ -1,3 +1,4 @@
+import TemplatesSection from '@/components/dashboard/TemplatesSection';
 import WeekCalendar from '@/components/dashboard/WeekCalendar';
 import LabeledSection from '@/components/LabeledSection';
 import Subsection from '@/components/Subsection';
@@ -25,16 +26,9 @@ function DashHome() {
         <LabeledSection
           label="Workouts"
           color="pink"
+          className="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]"
         >
-          <Subsection className="h-96">
-            <h2 className="w-full">Workouts</h2>
-            {/* <p className="max-w-full">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-              reiciendis vitae voluptate perspiciatis, illum dolor, similique
-              soluta asperiores totam doloremque magni neque animi unde ipsam a
-              error voluptatibus? Saepe, aliquam?
-            </p> */}
-          </Subsection>
+          <TemplatesSection />
         </LabeledSection>
       </div>
       <div className="flex min-w-[30rem] flex-1 flex-col gap-6">

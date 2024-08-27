@@ -14,7 +14,8 @@ const buttonVariants = cva(
       },
       size: {
         default: 'px-3 text-base',
-        lg: 'px-3 py-1 text-h6'
+        lg: 'px-3 py-1 text-h6',
+        icon: 'aspect-square'
       },
       hover: {
         gray: 'hover:bg-grayscale-80 hover:text-white',
