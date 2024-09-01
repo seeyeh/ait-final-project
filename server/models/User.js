@@ -13,9 +13,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
-    trim: true,
-    match: /^\S*$/ // no whitespace
+    required: true
   },
   stats: Map,
   refreshToken: String

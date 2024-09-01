@@ -1,9 +1,11 @@
 import axios from '@/api/axios';
 import Button from '@/components/Button';
+import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const LOGIN_URL = '/auth';
@@ -13,136 +15,137 @@ function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
+  const errorRef = useRef();
 
-  const userRef = useRef();
-  const errRef = useRef();
-
-  const [user, setUser] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [errMsg, setErrMsg] = useState('');
+  const { formState, handleSubmit, register, setError, setFocus, resetField } =
+    useForm({ defaultValues: { username: '', password: '', persist } });
 
   // Set focus on username input when component loads;
   useEffect(() => {
-    userRef.current.focus();
-  }, []);
+    setFocus('username');
+  }, [setFocus]);
 
-  // Removes error message whenever username/password gets changed because user has read it
-  useEffect(() => {
-    setErrMsg('');
-  }, [user, pwd]);
+  const errorMessage =
+    formState.errors.root?.serverError?.message ??
+    formState.errors.username?.message ??
+    formState.errors.password?.message;
 
-  const handleSubmit = async () => {
+  const onSubmit = async (formData) => {
+    const { username, password, persist } = formData;
+
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ username: user, password: pwd }),
+        JSON.stringify({ username, password }),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
-      console.log(JSON.stringify(response?.data));
+      localStorage.setItem('persist', persist);
+      setPersist(persist);
+
       const accessToken = response?.data?.accessToken;
-      setAuth({ user, pwd, accessToken });
-      setUser('');
-      setPwd('');
+      setAuth({ username, password, accessToken });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
-        setErrMsg('No Server Response.');
-      } else if (err.response?.status === 400) {
-        setErrMsg('Missing username or password.');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized.');
+        setError('root.serverError', {
+          type: '500',
+          message: 'No server response.'
+        });
+      } else if (err.response.status === 401) {
+        setError('username', {
+          type: '401',
+          message: 'Invalid username or password.'
+        });
       } else {
-        setErrMsg('Login failed.');
+        setError('root.serverError', {
+          type: '400',
+          message: 'Login failed. Please try again later.'
+        });
       }
-      errRef.current.focus();
+      errorRef.current.focus();
+      resetField('password');
     }
   };
 
-  const togglePersist = () => {
-    setPersist((prev) => !prev);
-  };
-
-  useEffect(() => {
-    localStorage.setItem('persist', persist);
-  }, [persist]); // whenever persist changes, set an item called "persist" in local storage to the new value
-
   return (
-    <div>
-      <div className="flex h-fit w-[24rem] flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-[1px] backdrop-brightness-95">
-        <h1 className="text-h2 text-black">Login</h1>
-        <div className="flex flex-col gap-8">
-          <div className="flex w-full flex-1 flex-col gap-4">
-            <Input
-              id="username"
-              header="Username"
-              className="w-full text-h4"
-              ref={userRef}
-              onChange={(e) => setUser(e.target.value)}
-              value={user}
-              required
-            />
-            <Input
-              id="password"
-              header="Password"
-              className="w-full"
-              type="password"
-              onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
-              required
-            />
-            <div className="flex flex-row items-center justify-between">
-              <p
-                ref={errRef}
-                className={'text-p text-pink-medium'}
-                aria-live="assertive"
-              >
-                {errMsg}
-              </p>
-              <a
-                href="/login"
-                className="text-p text-grayscale-60 underline"
-              >
-                Forgot password?
-              </a>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-row content-center gap-2 text-h6 text-grayscale-80">
-              <input
-                type="checkbox"
-                id="persist"
-                className="h-5 w-5 appearance-none rounded-lg border-2 bg-white transition-colors checked:border-green-dark checked:bg-green-light checked:shadow-[0px_0px_25px] checked:shadow-green-light"
-                onChange={togglePersist}
-                checked={persist}
-              />
-              <label htmlFor="persist">Stay signed in?</label>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="pink"
-                hover="gray"
-                size="lg"
-                onClick={handleSubmit}
-              >
-                Next
-              </Button>
-              <Link to="/sign-up">
-                <Button
-                  hover="gray"
-                  size="lg"
-                >
-                  Create an account
-                </Button>
-              </Link>
-            </div>
+    <div className="my-auto flex h-fit w-[24rem] max-w-full flex-col gap-6 rounded-5xl border border-grayscale-25 p-8 shadow-2xl backdrop-blur-[1px] backdrop-brightness-95">
+      <h1 className="text-h2 text-black">Login</h1>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-8"
+      >
+        <div className="flex w-full flex-1 flex-col gap-4">
+          <Input
+            id="username"
+            label="Username"
+            className="w-full min-w-32"
+            {...register('username', {
+              required: {
+                value: true,
+                message: 'Username is a required field.'
+              }
+            })}
+          />
+          <Input
+            id="password"
+            label="Password"
+            className="w-full min-w-32"
+            type="password"
+            {...register('password', {
+              required: {
+                value: true,
+                message: 'Password is a required field.'
+              }
+            })}
+          />
+          <div className="flex min-h-12 flex-row items-center justify-between gap-4 max-sm:flex-wrap">
+            <p
+              className={'text-p text-pink-medium'}
+              aria-live="assertive"
+              ref={errorRef}
+              tabIndex="-1"
+            >
+              {errorMessage}
+            </p>
+            <a
+              href="/login"
+              className="w-full text-nowrap text-right text-p text-grayscale-60 hover:underline"
+            >
+              Forgot password?
+            </a>
           </div>
         </div>
-      </div>
+
+        <div className="flex flex-col gap-5">
+          <Checkbox
+            id="persist"
+            label="Stay signed in?"
+            {...register('persist')}
+          />
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="pink"
+              hover="gray"
+              size="lg"
+              type="submit"
+            >
+              Log In
+            </Button>
+            <Link to="/sign-up">
+              <Button
+                hover="gray"
+                size="lg"
+                type="button"
+              >
+                Create an account
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
