@@ -4,6 +4,7 @@ import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { useRef } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -52,6 +53,7 @@ function SignUpForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
+  const errorRef = useRef();
 
   const { formState, handleSubmit, register, watch, setError } = useForm({
     mode: 'onTouched'
@@ -88,6 +90,7 @@ function SignUpForm() {
           message: 'Failed to create account, please try again later.'
         });
       }
+      errorRef.current.focus();
       return;
     }
 
@@ -117,6 +120,7 @@ function SignUpForm() {
           type: '400',
           message: 'Account created, but login failed. Please try again later.'
         });
+        errorRef.current.focus();
       }
     }
   };
@@ -161,6 +165,8 @@ function SignUpForm() {
             <p
               className={'text-p text-pink-medium'}
               aria-live="assertive"
+              ref={errorRef}
+              tabIndex="-1"
             >
               {errorMessage}
             </p>

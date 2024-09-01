@@ -4,7 +4,7 @@ import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
+  const errorRef = useRef();
 
   const { formState, handleSubmit, register, setError, setFocus, resetField } =
     useForm({ defaultValues: { username: '', password: '', persist } });
@@ -64,6 +65,7 @@ function LoginForm() {
           message: 'Login failed. Please try again later.'
         });
       }
+      errorRef.current.focus();
       resetField('password');
     }
   };
@@ -103,6 +105,8 @@ function LoginForm() {
             <p
               className={'text-p text-pink-medium'}
               aria-live="assertive"
+              ref={errorRef}
+              tabIndex="-1"
             >
               {errorMessage}
             </p>
