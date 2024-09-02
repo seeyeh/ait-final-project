@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "module": "ES6",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
-  }
+  },
+  "exclude": ["**/node_modules", "node_modules", "dist"]
 }
