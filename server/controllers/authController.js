@@ -98,7 +98,7 @@ const refresh = asyncHandler(async (req, res) => {
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
-    return res.status(204);
+    return res.status(204).json({ message: 'Logout successful' });
   } // No content; request successful there was no jwt cookie
   const refreshToken = cookies.jwt;
   // Delete refreshToken in the database
