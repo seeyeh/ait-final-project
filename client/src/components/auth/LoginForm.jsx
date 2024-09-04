@@ -3,6 +3,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 import { apiRoutes } from '@/lib/routes';
+import { jwtDecode } from 'jwt-decode';
 
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -42,7 +43,8 @@ function LoginForm() {
       );
 
       const accessToken = response?.data?.accessToken;
-      setAuth({ accessToken });
+      const { user } = jwtDecode(accessToken);
+      setAuth({ accessToken, ...user });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {

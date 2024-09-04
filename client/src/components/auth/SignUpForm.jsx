@@ -5,6 +5,7 @@ import useAuth from '@/hooks/useAuth';
 import { apiRoutes } from '@/lib/routes';
 
 import { cn } from '@/lib/utils';
+import { jwtDecode } from 'jwt-decode';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -107,7 +108,8 @@ function SignUpForm() {
       );
 
       const accessToken = response?.data?.accessToken;
-      setAuth({ accessToken });
+      const { user } = jwtDecode(accessToken);
+      setAuth({ accessToken, ...user });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {

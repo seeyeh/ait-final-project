@@ -1,4 +1,5 @@
-import useRefreshToken from '@/hooks/useRefreshToken';
+import { refreshToken } from '@/lib/auth';
+import { jwtDecode } from 'jwt-decode';
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useState } from 'react';
 
@@ -7,17 +8,14 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const refresh = useRefreshToken();
 
   useEffect(() => {
-    console.log('rendering:', auth, isLoading);
     const verifyRefreshToken = async () => {
       try {
-        const accessToken = await refresh();
-        setAuth({ accessToken });
-        console.log(auth, isLoading);
+        const accessToken = await refreshToken();
+        const { user } = jwtDecode(accessToken);
+        setAuth({ accessToken, ...user });
       } catch (e) {
-        console.log('dick', e);
         setAuth(null);
       } finally {
         setIsLoading(false);

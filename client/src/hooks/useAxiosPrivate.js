@@ -2,11 +2,11 @@
 
 import { axiosPrivate } from '@/api/axios';
 import useAuth from '@/hooks/useAuth';
-import useRefreshToken from '@/hooks/useRefreshToken';
+import { refreshToken } from '@/lib/auth';
+import { jwtDecode } from 'jwt-decode';
 import { useLayoutEffect } from 'react';
 
 const useAxiosPrivate = () => {
-  const refresh = useRefreshToken();
   const { auth, setAuth } = useAuth();
 
   useLayoutEffect(() => {
@@ -30,8 +30,9 @@ const useAxiosPrivate = () => {
           // Forbidden due to expired access token and if sent property (which indicates we've already looked over this 403 once) doesn't exist/we've yet to look over this 403. Prevents infinite looping.
           prevRequest.sent = true;
           try {
-            const accessToken = await refresh();
-            setAuth({ accessToken });
+            const accessToken = await refreshToken();
+            const { user } = jwtDecode(accessToken);
+            setAuth({ accessToken, ...user });
             prevRequest.headers['Authorization'] = `Bearer ${accessToken}`;
 
             return axiosPrivate(prevRequest); // making the request again
@@ -48,7 +49,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [auth, setAuth, refresh]); // The dependency array; we will use auth and refresh inside of this useEffect
+  }, [auth, setAuth]); // The dependency array; we will use auth and refresh inside of this useEffect
 
   return axiosPrivate;
 };
