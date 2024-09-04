@@ -2,13 +2,12 @@ import axios from '@/api/axios';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
+import { apiRoutes } from '@/lib/routes';
 
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const LOGIN_URL = '/auth';
 
 const usernameValidation = {
   required: {
@@ -68,10 +67,14 @@ function SignUpForm() {
     const { username, password } = formData;
 
     try {
-      await axios.post('/users', JSON.stringify({ username, password }), {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      await axios.post(
+        apiRoutes.users,
+        JSON.stringify({ username, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
     } catch (err) {
       if (!err?.response) {
         setError('root.serverError', {
@@ -95,7 +98,7 @@ function SignUpForm() {
 
     try {
       const response = await axios.post(
-        LOGIN_URL,
+        apiRoutes.auth,
         JSON.stringify({ username, password }),
         {
           headers: { 'Content-Type': 'application/json' },
@@ -104,7 +107,7 @@ function SignUpForm() {
       );
 
       const accessToken = response?.data?.accessToken;
-      setAuth({ username, password, accessToken });
+      setAuth({ accessToken });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
