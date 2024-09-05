@@ -1,7 +1,8 @@
 import Express from 'express';
-import { fileURLToPath } from 'url';
-const router = Express.Router();
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const router = Express.Router();
 
 const __filename = fileURLToPath(import.meta.url); // gets filename of server.js manually (es module)
 const __dirname = path.dirname(__filename); // gets parent directory of server.js (es module)

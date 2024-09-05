@@ -1,11 +1,5 @@
-import Exercise from '../models/Exercise.js';
-import Attempt from '../models/Attempt.js';
-import Workout from '../models/Workout.js';
-import Template from '../models/Template.js';
-import Split from '../models/Split.js';
 import User from '../models/User.js';
-
-import mongoose from 'mongoose';
+import Workout from '../models/Workout.js';
 
 export default async function testDB() {
   const user = await User.findOne({ username: 'user1' });

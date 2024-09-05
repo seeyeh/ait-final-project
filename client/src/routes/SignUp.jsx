@@ -1,8 +1,8 @@
-import LoginForm from '@/components/auth/LoginForm';
+import SignUpForm from '@/components/auth/SignUpForm';
 import useAuth from '@/hooks/useAuth';
 import { Navigate, useLocation } from 'react-router-dom';
 
-function Login() {
+function SignUp() {
   const { auth } = useAuth();
   const location = useLocation();
 
@@ -14,9 +14,9 @@ function Login() {
     />
   ) : (
     <div className="flex min-h-screen w-full justify-center px-4 py-16">
-      <LoginForm />
+      <SignUpForm />
     </div>
   );
 }
 
-export default Login;
+export default SignUp;

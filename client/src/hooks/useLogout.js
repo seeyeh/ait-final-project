@@ -1,12 +1,13 @@
-import axios from '../api/axios';
-import useAuth from './useAuth';
+import axios from '@/api/axios';
+import useAuth from '@/hooks/useAuth';
+import { apiRoutes } from '@/lib/routes';
 
 const useLogout = () => {
   const { setAuth } = useAuth();
   const logout = async () => {
-    setAuth({});
     try {
-      await axios.post('/auth/logout', {}, { withCredentials: true });
+      await axios.post(apiRoutes.logout, {}, { withCredentials: true });
+      setAuth(null);
     } catch (err) {
       console.error(err);
     }

@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
-import { v4 as uuid } from 'uuid';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
+import { v4 as uuid } from 'uuid';
 
 // DO I NEED TO DO THIS EVERY TIME I WANT TO USE DIRNAME?
 import { fileURLToPath } from 'url';
@@ -18,7 +18,10 @@ const logEvents = async (message, logFileName) => {
     if (!fs.existsSync(path.join(__dirname, '..', 'logs'))) {
       await fsPromises.mkdir(path.join(__dirname, '..', 'logs'));
     }
-    await fsPromises.appendFile(path.join(__dirname, '..', 'logs', logFileName), logItem);
+    await fsPromises.appendFile(
+      path.join(__dirname, '..', 'logs', logFileName),
+      logItem
+    );
   } catch (err) {
     console.log(err);
   }
@@ -32,4 +35,4 @@ const logger = function (req, res, next) {
   next();
 };
 
-export { logger, logEvents };
+export { logEvents, logger };

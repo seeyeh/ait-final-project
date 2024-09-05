@@ -1,7 +1,10 @@
 import { logEvents } from './logger.js';
 
 const errorHandler = (err, req, res, next) => {
-  logEvents(`${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log');
+  logEvents(
+    `${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}`,
+    'errLog.log'
+  );
   console.log(err.stack); // a large message in your console that gives lots of details about error like where the error is
 
   const status = res.statusCode ? res.statusCode : 500; // if status code doesn't yet exist, set to 500 (server error)

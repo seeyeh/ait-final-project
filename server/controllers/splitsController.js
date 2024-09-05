@@ -1,7 +1,7 @@
-import Template from '../models/Template.js';
-import Split from '../models/Split.js';
 import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
+import Split from '../models/Split.js';
+import Template from '../models/Template.js';
 
 const { ObjectId } = mongoose.Types;
 
@@ -18,12 +18,15 @@ const SplitSchemaFields = Object.freeze({
 // @access Private
 const getSplit = asyncHandler(async (req, res) => {
   const { parentUser } = req.query; // extract key/value pair of 'name' key from query string
-  if (!parentUser) return res.status(400).json({ message: 'parentUser field required' });
+  if (!parentUser)
+    return res.status(400).json({ message: 'parentUser field required' });
 
   // check if all fields of query are valid
   for (let field in req.query) {
     if (field in SplitSchemaFields === false)
-      return res.status(400).json({ message: `Invalid query field '${field}'` });
+      return res
+        .status(400)
+        .json({ message: `Invalid query field '${field}'` });
   }
 
   // populate activities with template names
@@ -48,18 +51,27 @@ const createNewSplit = asyncHandler(async (req, res) => {
   // check if all fields of body are valid
   for (let field in req.body) {
     if (field in SplitSchemaFields === false)
-      return res.status(400).json({ message: `Invalid input field '${field}'` });
+      return res
+        .status(400)
+        .json({ message: `Invalid input field '${field}'` });
   }
 
   let templateIds = [];
   if (req.body.templates) {
     const templates = req.body.templates;
-    if (!Array.isArray(templates) || !templates.every((template) => typeof template === 'string'))
-      return res.status(400).json({ message: 'Invalid template array, must be an array of strings' });
+    if (
+      !Array.isArray(templates) ||
+      !templates.every((template) => typeof template === 'string')
+    )
+      return res.status(400).json({
+        message: 'Invalid template array, must be an array of strings'
+      });
 
     // convert templates of request body into attempt schema
     templateIds = await Promise.all(
-      templates.map(async (template) => Template.findOne({ parentUser, _id: template }).select('_id').exec())
+      templates.map(async (template) =>
+        Template.findOne({ parentUser, _id: template }).select('_id').exec()
+      )
     );
     templateIds = templateIds.filter((e) => e);
   }
@@ -83,7 +95,10 @@ const createNewSplit = asyncHandler(async (req, res) => {
 const updateSplit = asyncHandler(async (req, res) => {
   const { parentUser, id, patches } = req.body;
   // Confirm data (parentUser and name required)
-  if (!parentUser || !id) return res.status(400).json({ message: 'parentUser and split id fields are required' });
+  if (!parentUser || !id)
+    return res
+      .status(400)
+      .json({ message: 'parentUser and split id fields are required' });
 
   // get split to patch
   const split = await Split.findOne({ parentUser, _id: id }).exec();
@@ -92,10 +107,20 @@ const updateSplit = asyncHandler(async (req, res) => {
   for (let patch of patches) {
     const { path, op, value } = patch;
     // do not allow patching of immutable fields
-    if (path in SplitSchemaFields === false || path === '_id' || path === 'parentUser')
+    if (
+      path in SplitSchemaFields === false ||
+      path === '_id' ||
+      path === 'parentUser'
+    )
       return res.status(400).json({ message: `Invalid patch path` });
 
-    const { result, error } = await patchSplit(split, parentUser, op, path, value);
+    const { result, error } = await patchSplit(
+      split,
+      parentUser,
+      op,
+      path,
+      value
+    );
     if (error) return res.status(400).json({ message: error });
     split[path] = result;
 
@@ -111,13 +136,17 @@ const updateSplit = asyncHandler(async (req, res) => {
 const deleteSplit = asyncHandler(async (req, res) => {
   const { parentUser, id } = req.body;
   // Confirm data (parentUser and name required)
-  if (!parentUser || !id) return res.status(400).json({ message: 'parentUser and split id fields are required' });
+  if (!parentUser || !id)
+    return res
+      .status(400)
+      .json({ message: 'parentUser and split id fields are required' });
   // get split to patch
   const split = await Split.findOne({ parentUser, _id: id }).exec();
   if (!split) return res.status(400).json({ message: `No split found` });
 
   const { deletedCount } = await Split.deleteOne();
-  if (deletedCount !== 1) return res.status(400).json({ message: `Split could not be deleted` });
+  if (deletedCount !== 1)
+    return res.status(400).json({ message: `Split could not be deleted` });
   res.json({ message: `Split ${split.name} deleted` });
 });
 
@@ -128,8 +157,11 @@ async function patchSplit(split, parentUser, op, path, value) {
       // validation: add operation must add to an iterable
       if (!isArray) return { error: `Invalid patch path, must be an array` };
       else {
-        const templateId = await Template.findOne({ parentUser, _id: value }).select('_id').exec();
-        if (!templateId) return { error: `Invalid patch value, template not found` };
+        const templateId = await Template.findOne({ parentUser, _id: value })
+          .select('_id')
+          .exec();
+        if (!templateId)
+          return { error: `Invalid patch value, template not found` };
         split[path].push(templateId);
       }
       break;
@@ -138,10 +170,14 @@ async function patchSplit(split, parentUser, op, path, value) {
       // validation: remove operation must add to an iterable
       if (!isArray) return { error: `Invalid patch path, must be an array` };
       else {
-        const templateId = await Template.findOne({ parentUser, _id: value }).select('_id').exec();
-        if (!templateId) return { error: `Invalid patch value, template not found` };
+        const templateId = await Template.findOne({ parentUser, _id: value })
+          .select('_id')
+          .exec();
+        if (!templateId)
+          return { error: `Invalid patch value, template not found` };
         const templateIndex = split[path].indexOf(new ObjectId(templateId));
-        if (templateIndex == -1) return { error: `Invalid patch value, value is not an template` };
+        if (templateIndex == -1)
+          return { error: `Invalid patch value, value is not an template` };
         split[path].splice(templateIndex, 1);
       }
       break;
@@ -149,8 +185,10 @@ async function patchSplit(split, parentUser, op, path, value) {
     // replace operation for name, description
     case 'replace':
       // validation: replace operation cannot be used on iterable and value must be string
-      if (isArray) return { error: `Invalid patch path, cannot replace an array` };
-      if (typeof value !== 'string') return { error: `Invalid patch value, must be a string` };
+      if (isArray)
+        return { error: `Invalid patch path, cannot replace an array` };
+      if (typeof value !== 'string')
+        return { error: `Invalid patch value, must be a string` };
       split[path] = value;
       break;
     default:

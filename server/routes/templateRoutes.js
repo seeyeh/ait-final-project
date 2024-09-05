@@ -1,6 +1,7 @@
 import Express from 'express';
-const templatesRouter = Express.Router();
 import templatesController from '../controllers/templatesController.js';
+
+const templatesRouter = Express.Router();
 
 templatesRouter
   .route('/')

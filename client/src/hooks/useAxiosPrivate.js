@@ -1,15 +1,15 @@
 // axiosPrivate is used because it's an instance of axios that we've written a bunch of interceptors for in hooks/useAxiosPrivate.js that do the work of attaching necessary headers to first-time requests to the API (e.g. Authorization: "Bearer _____") where the accessToken needs to be attached or else they won't be authorized, and generating new accessTokens if they've expired, all without the user noticing anything
 
-import { useEffect } from 'react';
-import { axiosPrivate } from '../api/axios';
-import useAuth from './useAuth';
-import useRefreshToken from './useRefreshToken';
+import { axiosPrivate } from '@/api/axios';
+import useAuth from '@/hooks/useAuth';
+import { refreshToken } from '@/lib/auth';
+import { jwtDecode } from 'jwt-decode';
+import { useLayoutEffect } from 'react';
 
 const useAxiosPrivate = () => {
-  const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
@@ -29,9 +29,16 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           // Forbidden due to expired access token and if sent property (which indicates we've already looked over this 403 once) doesn't exist/we've yet to look over this 403. Prevents infinite looping.
           prevRequest.sent = true;
-          const newAccessToken = await refresh();
-          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          return axiosPrivate(prevRequest); // making the request again
+          try {
+            const accessToken = await refreshToken();
+            const { user } = jwtDecode(accessToken);
+            setAuth({ accessToken, ...user });
+            prevRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+
+            return axiosPrivate(prevRequest); // making the request again
+          } catch {
+            setAuth(null);
+          }
         }
         return Promise.reject(error);
       }
@@ -42,7 +49,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [auth, refresh]); // The dependency array; we will use auth and refresh inside of this useEffect
+  }, [auth, setAuth]); // The dependency array; we will use auth and refresh inside of this useEffect
 
   return axiosPrivate;
 };

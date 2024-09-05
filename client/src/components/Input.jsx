@@ -1,8 +1,8 @@
+import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-import { cn } from '../lib/utils';
-const Input = forwardRef(({ id, className, header, ...props }, ref) => {
-  // props needed: header, type, placeholder, handleChange, name, value
+
+const Input = forwardRef(({ id, className, label, ...props }, ref) => {
   return (
     <div className={cn('flex w-56 flex-col-reverse', className)}>
       <input
@@ -17,11 +17,9 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
       />
       <label
         htmlFor={id}
-        className={cn(
-          'w-fit bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white'
-        )}
+        className="w-fit text-ellipsis text-nowrap bg-grayscale-25 p-2 pt-1 text-h6 text-grayscale-80 transition-colors peer-focus:bg-pink-medium peer-focus:text-white"
       >
-        {header}
+        {label}
       </label>
     </div>
   );
@@ -29,10 +27,8 @@ const Input = forwardRef(({ id, className, header, ...props }, ref) => {
 Input.displayName = 'Input';
 Input.propTypes = {
   id: PropTypes.string,
-  header: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   className: PropTypes.string
 };
 
 export default Input;
-
-// <Input className="bg-white"/>

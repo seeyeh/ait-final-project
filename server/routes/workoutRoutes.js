@@ -1,6 +1,7 @@
 import Express from 'express';
-const workoutsRouter = Express.Router();
 import workoutsController from '../controllers/workoutsController.js';
+
+const workoutsRouter = Express.Router();
 
 workoutsRouter
   .route('/')
