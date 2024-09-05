@@ -1,15 +1,14 @@
 import axios from '@/api/axios';
 import Button from '@/components/Button';
-import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
-import { cn } from '@/lib/utils';
-import { useRef } from 'react';
+import { apiRoutes } from '@/lib/routes';
 
+import { cn } from '@/lib/utils';
+import { jwtDecode } from 'jwt-decode';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const LOGIN_URL = '/auth';
 
 const usernameValidation = {
   required: {
@@ -49,7 +48,7 @@ const passwordValidation = {
 };
 
 function SignUpForm() {
-  const { setAuth, setPersist } = useAuth();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
@@ -66,13 +65,17 @@ function SignUpForm() {
     formState.errors.confirm?.message;
 
   const onSubmit = async (formData) => {
-    const { username, password, persist } = formData;
+    const { username, password } = formData;
 
     try {
-      await axios.post('/users', JSON.stringify({ username, password }), {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      await axios.post(
+        apiRoutes.users,
+        JSON.stringify({ username, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
     } catch (err) {
       if (!err?.response) {
         setError('root.serverError', {
@@ -96,18 +99,17 @@ function SignUpForm() {
 
     try {
       const response = await axios.post(
-        LOGIN_URL,
+        apiRoutes.auth,
         JSON.stringify({ username, password }),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
-      localStorage.setItem('persist', persist);
-      setPersist(persist);
 
       const accessToken = response?.data?.accessToken;
-      setAuth({ username, password, accessToken });
+      const { user } = jwtDecode(accessToken);
+      setAuth({ accessToken, ...user });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
@@ -172,33 +174,24 @@ function SignUpForm() {
             </p>
           </div>
         </div>
-
-        <div className="flex flex-col gap-5">
-          <Checkbox
-            id="persist"
-            label="Stay signed in?"
-            {...register('persist')}
-          />
-
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="pink"
+            hover="gray"
+            size="lg"
+            type="submit"
+          >
+            Create Account
+          </Button>
+          <Link to="/login">
             <Button
-              variant="pink"
               hover="gray"
               size="lg"
-              type="submit"
+              type="button"
             >
-              Create Account
+              To Login
             </Button>
-            <Link to="/login">
-              <Button
-                hover="gray"
-                size="lg"
-                type="button"
-              >
-                To Login
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
       </form>
     </div>

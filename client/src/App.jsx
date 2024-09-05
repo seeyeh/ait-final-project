@@ -1,4 +1,3 @@
-import PersistLogin from '@/components/PersistLogin';
 import RequireAuth from '@/components/RequireAuth';
 import DashHome from '@/routes/DashHome';
 import DashLayout from '@/routes/DashLayout';
@@ -30,17 +29,15 @@ function App() {
         />
 
         {/* Protected routes */}
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth />}>
+          <Route
+            path="dash"
+            element={<DashLayout />}
+          >
             <Route
-              path="dash"
-              element={<DashLayout />}
-            >
-              <Route
-                index
-                element={<DashHome />}
-              />
-            </Route>
+              index
+              element={<DashHome />}
+            />
           </Route>
         </Route>
 

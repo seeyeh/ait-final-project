@@ -1,4 +1,5 @@
 import Button from '@/components/Button';
+import useAuth from '@/hooks/useAuth';
 import useLogout from '@/hooks/useLogout';
 import { cn } from '@/lib/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const DashSidebar = () => {
   const logout = useLogout();
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onGoHomeClicked = () => navigate('/dash');
@@ -40,6 +42,7 @@ const DashSidebar = () => {
       )}
     >
       {goHomeButton}
+      <h3 className="text-h5 font-medium">Username: {auth.username}</h3>
       <span className="flex-grow" />
       <Button
         onClick={handleLogout}

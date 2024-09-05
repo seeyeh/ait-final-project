@@ -22,8 +22,9 @@ const login = asyncHandler(async (req, res) => {
 
   const accessToken = jwt.sign(
     {
-      UserInfo: {
-        username: foundUser.username
+      user: {
+        username: foundUser.username,
+        id: foundUser.id
       }
     },
     process.env.ACCESS_TOKEN_SECRET,
@@ -79,8 +80,9 @@ const refresh = asyncHandler(async (req, res) => {
 
       const accessToken = jwt.sign(
         {
-          UserInfo: {
-            username: foundUser.username
+          user: {
+            username: foundUser.username,
+            id: foundUser.id
           }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -98,7 +100,7 @@ const refresh = asyncHandler(async (req, res) => {
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
-    return res.status(204);
+    return res.status(204).json({ message: 'Logout successful' });
   } // No content; request successful there was no jwt cookie
   const refreshToken = cookies.jwt;
   // Delete refreshToken in the database

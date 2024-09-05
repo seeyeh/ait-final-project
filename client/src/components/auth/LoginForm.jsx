@@ -1,24 +1,23 @@
 import axios from '@/api/axios';
 import Button from '@/components/Button';
-import Checkbox from '@/components/Checkbox';
 import Input from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
+import { apiRoutes } from '@/lib/routes';
+import { jwtDecode } from 'jwt-decode';
 
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const LOGIN_URL = '/auth';
-
 function LoginForm() {
-  const { setAuth, persist, setPersist } = useAuth();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dash';
   const errorRef = useRef();
 
   const { formState, handleSubmit, register, setError, setFocus, resetField } =
-    useForm({ defaultValues: { username: '', password: '', persist } });
+    useForm({ defaultValues: { username: '', password: '' } });
 
   // Set focus on username input when component loads;
   useEffect(() => {
@@ -31,22 +30,21 @@ function LoginForm() {
     formState.errors.password?.message;
 
   const onSubmit = async (formData) => {
-    const { username, password, persist } = formData;
+    const { username, password } = formData;
 
     try {
       const response = await axios.post(
-        LOGIN_URL,
+        apiRoutes.auth,
         JSON.stringify({ username, password }),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
-      localStorage.setItem('persist', persist);
-      setPersist(persist);
 
       const accessToken = response?.data?.accessToken;
-      setAuth({ username, password, accessToken });
+      const { user } = jwtDecode(accessToken);
+      setAuth({ accessToken, ...user });
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
@@ -119,31 +117,24 @@ function LoginForm() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-5">
-          <Checkbox
-            id="persist"
-            label="Stay signed in?"
-            {...register('persist')}
-          />
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="pink"
+            hover="gray"
+            size="lg"
+            type="submit"
+          >
+            Log In
+          </Button>
+          <Link to="/sign-up">
             <Button
-              variant="pink"
               hover="gray"
               size="lg"
-              type="submit"
+              type="button"
             >
-              Log In
+              Create an account
             </Button>
-            <Link to="/sign-up">
-              <Button
-                hover="gray"
-                size="lg"
-                type="button"
-              >
-                Create an account
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
       </form>
     </div>
