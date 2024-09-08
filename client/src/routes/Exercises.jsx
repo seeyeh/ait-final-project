@@ -26,7 +26,7 @@ const Exercises = () => {
     const getExercises = async () => {
       try {
         const response = await axiosPrivate.get('/exercises', {
-          params: { parentUser: '66b5b77e6f9fbd6c8bd5b11b' }, // parentUser is the User's _id in their db file, so we'd have to fetcch it when they log in and save it in the auth context?
+          params: { parentUser: auth.id }, // parentUser is the User's _id in their db file, so we'd have to fetcch it when they log in and save it in the auth context?
           signal: controller.signal
         });
         console.log(response);
