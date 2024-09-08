@@ -1,6 +1,6 @@
+import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-import { cn } from '../../lib/utils';
 
 const SearchOption = forwardRef(({ id, index, className, ...props }, ref) => {
   return (

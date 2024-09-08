@@ -1,8 +1,8 @@
+import Button from '@/components/Button';
+import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { cn } from '../../lib/utils';
-import Button from '../Button';
 
 const StickyNote = ({ exercise, editing, index, content }) => {
   const [isEditing, setIsEditing] = useState(editing);

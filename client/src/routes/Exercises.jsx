@@ -1,12 +1,13 @@
+import Button from '@/components/Button';
+import LabeledSection from '@/components/LabeledSection';
+import ParchmentSection from '@/components/ParchmentSection';
+import SearchBar from '@/components/exercises/SearchBar';
+import SearchOption from '@/components/exercises/SearchOption';
+import StickyNote from '@/components/exercises/StickyNote';
+import useAuth from '@/hooks/useAuth';
+import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import LabeledSection from '../components/LabeledSection';
-import ParchmentSection from '../components/ParchmentSection';
-import SearchBar from '../components/exercises/SearchBar';
-import SearchOption from '../components/exercises/SearchOption';
-import StickyNote from '../components/exercises/StickyNote';
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const Exercises = () => {
   const searchRef = useRef();
@@ -17,9 +18,9 @@ const Exercises = () => {
   const location = useLocation();
   const [search, setSearch] = useState();
   const [selectedNotes, setSelectedNotes] = useState(selected?.notes || []);
+  const { auth } = useAuth();
 
   useEffect(() => {
-    let isMounted = true;
     const controller = new AbortController();
 
     const getExercises = async () => {
@@ -45,7 +46,7 @@ const Exercises = () => {
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.get('/exercises', {
-        params: { parentUser: '66b5b77e6f9fbd6c8bd5b11b', name: e.target.id }, // parentUser is the User's _id in their db file, so we'd have to fetcch it when they log in and save it in the auth context?
+        params: { parentUser: auth.id, name: e.target.id }, // parentUser is the User's _id in their db file, so we'd have to fetcch it when they log in and save it in the auth context?
         signal: controller.signal
       });
       console.log(response);
@@ -77,7 +78,11 @@ const Exercises = () => {
 
   const exercisesList = exercises?.map((entry, index) => {
     return (
-      <SearchOption id={entry.name} key={index} onClick={openExercise}>
+      <SearchOption
+        id={entry.name}
+        key={index}
+        onClick={openExercise}
+      >
         {entry.name}
       </SearchOption>
     );
@@ -119,7 +124,10 @@ const Exercises = () => {
               {selected?.instructions ||
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend elit in efficitur eleifend. Etiam eget nisl non urna sollicitudin dictum. Nam pretium massa vel felis imperdiet, sed mattis erat pretium. In vel nunc purus.'}
             </LabeledSection>
-            <Button className="w-fit" onClick={addNote}>
+            <Button
+              className="w-fit"
+              onClick={addNote}
+            >
               + Add Sticky Note
             </Button>
             <div className="flex flex-row gap-2">{stickyList}</div>
